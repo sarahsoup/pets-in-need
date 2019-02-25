@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Pets In Need</title>
+    <link href="style.css" rel="stylesheet"/>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-4" id="sidebar">
+          <div class="row">
+            <div class="col-12 col-md-10 offset-md-2 head">
+              <img id="logo" src="assets/logo_color.png">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 col-md-9 offset-md-2">
+                <h1 id="sidebar-header" class="acumin-cond">ADOPTABLES</h1>
+                <a class="pin-link acumin" id="filter-toggle">view success stories</a>
+                <div id="sidebar-content">
+                  <div id="content-filters">
+                    <p>Show me...</p>
+                    <form class="filter-form">
+                      <ul>
+                          <li>
+                              <input type="radio" name="filter" id="dogs">
+                              <label for="dogs">Dogs</label>
+                          </li>
+                          <li>
+                              <input type="radio" name="filter" id="cats">
+                              <label for="cats">Cats</label>
+                          </li>
+                      </ul>
+                    </form>
+                      <p>I live in a(n)...</p>
+                      <form class="filter-form">
+                        <ul>
+                            <li>
+                                <input type="radio" name="filter" id="apt">
+                                <label for="apt">Apartment</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="filter" id="condo">
+                                <label for="condo">Condo/townhome</label>
+                            </li>
+                            <li>
+                              <input type="radio" name="filter" id="house">
+                              <label for="house">House with a yard</label>
+                          </li>
+                        </ul>
+                    </form>
+                    <p>I am...</p>
+                    <form class="filter-form">
+                      <ul>
+                          <li>
+                              <input type="radio" name="filter" id="otg">
+                              <label for="otg">On the go</label>
+                          </li>
+                          <li>
+                              <input type="radio" name="filter" id="busy">
+                              <label for="busy">Busy but with free time</label>
+                          </li>
+                          <li>
+                            <input type="radio" name="filter" id="laid-back">
+                            <label for="laid-back">Totally laid back</label>
+                        </li>
+                      </ul>
+                    </form>
+                    <form class="filter-form">
+                      <ul>
+                          <li>
+                              <input type="radio" name="filter" id="new">
+                              <label for="new">A new dog/cat owner</label>
+                          </li>
+                          <li>
+                              <input type="radio" name="filter" id="recent">
+                              <label for="recent">A recent dog/cat owner (in the last 3 years)</label>
+                          </li>
+                          <li>
+                            <input type="radio" name="filter" id="experienced">
+                            <label for="experienced">Highly experienced with dogs/cats with challenging behaviors</label>
+                        </li>
+                      </ul>
+                    </form>
+                    <a class="pin-link acumin" id="filter-clear">clear filters</a>
+                  </div>
+                  <div id="content-how-to-read" class="hidden">
+                    <p class="step" id="step-1">
+                      Each animal is represented by a sunburst. Its position is based on its <span class="bold">age in years</span>, and <span class="bold">months in the shelter</span>.
+                      <br><br>For instance, <span class="span-name"></span> is <span id="span-age"></span> years old and has spent <span id="span-duration"></span> months in the shelter.
+                    </p>
+                    <p class="step" id="step-2">
+                      The background represents the animal’s <span class="bold">size</span> and <span class="bold">fur color</span>. <span class="span-name"></span> is <span id="span-size"></span>-sized with a <span id="span-color"></span>-colored coat.
+                      <br><br>The center circle indicates the <span class="bold">species</span>. <span class="span-name"></span> is a <span id="span-species"></span>.
+                      <br><br>The radiating lines indicate <span class="bold">gender</span>. <span class="span-name"></span> is <span id="span-gender"></span>.
+                    </p>
+                    <p class="step" id="step-3">
+                      The personality traits are represented by stronger rays radiating from the center.
+                      <br><br>Each ray represents a different personality trait.
+                      <br><br>Each trait is rated on a level of 1-5. The higher the rating, the longer the ray.
+                    </p>
+                    <a class="pin-link" id="link-prev">&nbsp;← prev</a>
+                    <a class="pin-link" id="link-next">next →&nbsp;</a>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-8" id="chart-col">
+          <div class="row">
+            <div class="col-12 head">
+              <div class="right">
+                  <button type="button" id="btn-read" class="btn pin-btn acumin">HOW TO READ</button>
+                  <button type="button" id="btn-info" class="btn pin-btn info">i</button>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+                <svg id="chart"></svg>
+            </div>
+          </div>
+        </div>
+    </div>
+
+  </body>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="script.js"></script>
+</html>
