@@ -52,7 +52,7 @@ obj.howToReadOpen = false;
 obj.howToReadStep = 0;
 
 // load data and create chart
-d3.csv('/data/pin_data.csv',function(row){
+d3.csv('./data/pin_data.csv',function(row){
     const adoptionDate = row.adoption_date;
     const adoptedIn = (adoptionDate == '') ? 0 : 1;
     const weightCat = (row.species.toLowerCase() == 'dog') ? ((+row.weight <= weightsMax.dog.small) ? 'small' : (+row.weight <= weightsMax.dog.medium) ? 'medium' : 'large') 
@@ -281,7 +281,7 @@ function createPortrait(data){
     const randomNum = Math.floor(Math.random()*6) + 1;
 
     element.append('svg:image')
-        .attr('xlink:href',d => `assets/watercolor/${d.colorCat}/Watercolor ${randomNum}.png`)
+        .attr('xlink:href',d => `./assets/watercolor/${d.colorCat}/Watercolor ${randomNum}.png`)
         .attr('class','watercolor')
         .attr('x',-weightMap.get(data.weightCat)/2)
         .attr('y',-weightMap.get(data.weightCat)/2)
@@ -325,27 +325,27 @@ function createPortrait(data){
 
     // personality trait 1: 
     element.append('svg:image')
-        .attr('xlink:href',d => `assets/personality-rays/level-${d.traitExtraSpecies}.svg`)
+        .attr('xlink:href',d => `./assets/personality-rays/level-${d.traitExtraSpecies}.svg`)
         .attr('class','trait-ray trait-species');
 
     // personality trait 2: 
     element.append('svg:image')
-        .attr('xlink:href',d => `assets/personality-rays/level-${d.traitExtraHumans}.svg`)
+        .attr('xlink:href',d => `./assets/personality-rays/level-${d.traitExtraHumans}.svg`)
         .attr('class','trait-ray trait-humans');
 
     // personality trait 3: 
     element.append('svg:image')
-        .attr('xlink:href',d => `assets/personality-rays/level-${d.traitEnergy}.svg`)
+        .attr('xlink:href',d => `./assets/personality-rays/level-${d.traitEnergy}.svg`)
         .attr('class','trait-ray trait-energy');
 
     // personality trait 4: 
     element.append('svg:image')
-        .attr('xlink:href',d => `assets/personality-rays/level-${d.traitOpenness}.svg`)
+        .attr('xlink:href',d => `./assets/personality-rays/level-${d.traitOpenness}.svg`)
         .attr('class','trait-ray trait-open');
 
     // personality trait 5: 
     element.append('svg:image')
-        .attr('xlink:href',d => `assets/personality-rays/level-${d.traitAffection}.svg`)
+        .attr('xlink:href',d => `./assets/personality-rays/level-${d.traitAffection}.svg`)
         .attr('class','trait-ray trait-affection');
 
     element.selectAll('.trait-ray')
