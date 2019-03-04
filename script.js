@@ -9,8 +9,8 @@ const m = { l: 50, t: 50, r: 50, b: 50 };
 const chartW = document.getElementById('chart-col').offsetWidth;
 const chartH = window.innerHeight - chartY;
 svg
-    .attr('width',chartW)
-    .attr('height',chartH);
+    .style('width',chartW + 'px')
+    .style('height',chartH + 'px');
 
 // get sidebar height
 const filtersY = d3.select('#content-filters').node().getBoundingClientRect().y;
@@ -99,8 +99,7 @@ d3.csv('./data/pin_data.csv',function(row){
     let durationMax = (obj.dataFilter == 'available') ? obj.durationMaxAvailable : obj.durationMaxAdopted;
     obj.xScale.domain([0,durationMax]);
 
-    svg.append('g')
-        .attr('id','x-scale')
+    svg.select('#x-scale')
         .attr('transform', `translate(0,${chartH - m.b - m.t})`)
         .call(d3.axisBottom(obj.xScale).tickValues(xAxisTicks(durationMax)));
 
@@ -117,8 +116,7 @@ d3.csv('./data/pin_data.csv',function(row){
     let ageMax = (obj.dataFilter == 'available') ? obj.ageMaxAvailable : obj.ageMaxAdopted;
     obj.yScale.domain([0,Math.ceil(ageMax)]);
 
-    svg.append('g')
-        .attr('id','y-scale')
+    svg.select('#y-scale')
         .attr('transform', `translate(${m.l},0)`)
         .call(d3.axisLeft(obj.yScale).ticks(Math.ceil(ageMax)).tickFormat(d3.format('d')));
     
@@ -151,12 +149,48 @@ d3.csv('./data/pin_data.csv',function(row){
         .attr('transform',d => `translate(${obj.xScale(d.duration)},${obj.yScale(d.age)})`)
         .each(function(d){
             createPortrait(d);
-        })
-        .on('click',function(d){
-            console.log(d);
+        });
+
+    // set up legend elements on page load
+    d3.selectAll('.size-background-circle')
+        .attr('r',function(){
+            let radius;
+            thisId = d3.select(this).attr('id');
+            if(thisId == 'background-circle-small'){ radius = weightMap.get('small');
+            }else if(thisId == 'background-circle-medium'){ radius = weightMap.get('medium');
+            }else if(thisId == 'background-circle-large'){ radius = weightMap.get('large');
+            }else{ radius = (heightMap.get(`${thisId[thisId.length -1]}`) + 10 -1) * 2 };
+            return radius;
         })
 
     // interations
+    svg.on('click',function(){
+        console.log('svg clicked');
+        // if HTR open, close
+        if(d3.select('#btn-read').classed('pin-btn-active')){
+            obj.howToReadStep = 0;
+            howToRead();
+
+            // enable portrait interactions
+            enablePortraitInteractions();
+            
+            // if animal selected, deselect
+        }else if(d3.select('#content-animal-selected').classed('hidden') == false){
+            d3.select('#content-animal-selected').classed('hidden',true);
+            d3.select('#filter-toggle').classed('hidden',false);
+            if(obj.dataFilter == 'available'){
+                d3.select('#content-filters').classed('hidden',false);
+                d3.select('#sidebar-header').html('ADOPTABLES');
+            }else{
+                d3.select('#content-success-stories').classed('hidden',false);
+                d3.select('#sidebar-header').html('SUCCESS STORIES');
+            }
+        }
+
+    });
+
+    enablePortraitInteractions();
+
     d3.select('#filter-toggle')
         .on('click',function(){
             if(obj.dataFilter == 'available'){
@@ -197,14 +231,26 @@ d3.csv('./data/pin_data.csv',function(row){
             d3.selectAll('input[name=filter]').property('checked',false);
         })
 
+    $('#info-modal')
+        .on('show.bs.modal',function(){
+            d3.select('#btn-info').classed('pin-btn-active',true);
+        })
+        .on('hidden.bs.modal',function(){
+            d3.select('#btn-info').classed('pin-btn-active',false);
+        })
+
     d3.select('#btn-read')
         .on('click',function(){
             if(d3.select(this).classed('pin-btn-active')){
                 obj.howToReadStep = 0;
                 howToRead();
 
+                // enable portrait interactions
+                enablePortraitInteractions();
+
             }else{
                 d3.select(this).classed('pin-btn-active',true);
+                d3.select('#g-legend').classed('hidden',false);
                 obj.howToReadStep = 1;
 
                 // select portrait with max duration
@@ -217,7 +263,21 @@ d3.csv('./data/pin_data.csv',function(row){
                     maxObj = dataAdopted.find(d => d.duration == maxDur);
                 }
                 obj.animalMax = maxObj;
+                setUpLegend();
                 howToRead('forward');
+
+                // disable portrait interactions
+                svg.selectAll('.portrait')
+                    .style('cursor','default')
+                    .on('mouseenter',function(d){
+                        // do nothing
+                    })
+                    .on('mouseleave',function(d){
+                        // do nothing
+                    })
+                    .on('click',function(d){
+                        // do nothing
+                    });
             }
         })
 
@@ -375,7 +435,14 @@ function createPortrait(data){
 
 function howToRead(direction){
     if(obj.howToReadStep == 1){
+
+        // legend elements
+        d3.selectAll('.htr-1').classed('hidden',false);
+        d3.selectAll('.htr-2').classed('hidden',true);
+        d3.selectAll('.htr-3').classed('hidden',true);
+
         if(direction == 'forward'){
+            // sidebar
             d3.select('#content-filters')
                 .classed('hidden',true);
             d3.select('#content-how-to-read')
@@ -414,7 +481,22 @@ function howToRead(direction){
                 .style('opacity',d => (d.id == obj.animalMax.id) ? 1 : 0.4);
 
             // add axis text and lines to chart
-
+            // const svgNode = d3.select('#chart').node().getBoundingClientRect();
+            // const textAxisY = d3.select('#y-scale').select('.tick').select('text').node().getBoundingClientRect();
+            // const textAgeX = textAxisY.x + textAxisY.width - svgNode.x;
+            // const textDurY = d3.select('#x-scale').select('.tick').select('text').node().getBoundingClientRect().y - svgNode.y;
+            d3.select('#g-legend')
+                .attr('transform',`translate(${obj.xScale(obj.animalMax.duration)},${obj.yScale(obj.animalMax.age)})`);
+            d3.select('#text-age')
+                .attr('x',-(obj.xScale(obj.animalMax.duration)-m.l+12))
+                .attr('y',0)
+                .attr('dy','0.32em') // manual adjustment
+                .text(obj.animalMax.age.toFixed(1));
+            d3.select('#text-duration')
+                .attr('x',0)
+                .attr('y',chartH - m.b - m.t - obj.yScale(obj.animalMax.age) + 9)
+                .attr('dy','0.71em') // manual adjustment
+                .text(obj.animalMax.duration.toFixed(0));
         }else{
             // transform scales and portraits
             let durationMax = (obj.dataFilter == 'available') ? obj.durationMaxAvailable : obj.durationMaxAdopted;
@@ -430,6 +512,15 @@ function howToRead(direction){
             d3.selectAll(`.${obj.dataFilter}`)
                 .transition()
                 .attr('transform',d => `translate(${obj.xScale(d.duration)},${obj.yScale(d.age)})`);
+            d3.select('#g-legend')
+                .transition()
+                .attr('transform',`translate(${obj.xScale(obj.animalMax.duration)},${obj.yScale(obj.animalMax.age)})`);
+            d3.select('#text-age')
+                .transition()
+                .attr('x',-(obj.xScale(obj.animalMax.duration)-m.l+12));
+            d3.select('#text-duration')
+                .transition()
+                .attr('y',chartH - m.b - m.t - obj.yScale(obj.animalMax.age) + 9);
         }
 
         // update sidebar -- moved after so paragraph heights could be accurately calculated
@@ -442,6 +533,10 @@ function howToRead(direction){
             .classed('link-disabled',true);
         
     }else if(obj.howToReadStep == 2){
+        d3.selectAll('.htr-1').classed('hidden',false);
+        d3.selectAll('.htr-2').classed('hidden',false);
+        d3.selectAll('.htr-3').classed('hidden',true);
+
         // update sidebar
         d3.selectAll('.step')
             .classed('hidden', function(){
@@ -465,10 +560,29 @@ function howToRead(direction){
                 .transition()
                 .attr('transform',d => (d.id == obj.animalMax.id) ? `translate(${obj.xScale(d.duration)},${obj.yScale(d.age)}) scale(2)`
                 : `translate(${obj.xScale(d.duration)},${obj.yScale(d.age)})`);
+
+            // legend
+            d3.select('#g-legend')
+                .transition()
+                .attr('transform',`translate(${obj.xScale(obj.animalMax.duration)},${obj.yScale(obj.animalMax.age)})`);
+            d3.select('#text-age')
+                .transition()
+                .attr('x',-(obj.xScale(obj.animalMax.duration)-m.l+12));
+            d3.select('#text-duration')
+                .transition()
+                .attr('y',chartH - m.b - m.t - obj.yScale(obj.animalMax.age) + 9);
+            d3.selectAll('.htr-2')
+                .style('opacity',0)
+                .transition()
+                .delay(250)
+                .style('opacity',1);
         }else{
             d3.select('#link-next').html('next →&nbsp;');
         }
     }else if(obj.howToReadStep == 3){
+        d3.selectAll('.htr-2').classed('hidden',true);
+        d3.selectAll('.htr-3').classed('hidden',false);
+
         d3.selectAll('.step')
             .classed('hidden', function(){
                 const thisId = d3.select(this).attr('id');
@@ -479,9 +593,14 @@ function howToRead(direction){
 
     }else if(obj.howToReadStep == 0){
         d3.select('#btn-read').classed('pin-btn-active',false);
+        d3.select('#g-legend').classed('hidden',true);
 
         // update sidebar
-        d3.select('#content-filters').classed('hidden',false);
+        if(obj.dataFilter == 'available'){
+            d3.select('#content-filters').classed('hidden',false);
+        }else{
+            d3.select('#content-success-stories').classed('hidden',false);
+        }
         d3.select('#content-how-to-read').classed('hidden',true);
 
         // reset axes and portraits
@@ -499,7 +618,131 @@ function howToRead(direction){
             .transition()
             .style('opacity',1)
             .attr('transform',d => `translate(${obj.xScale(d.duration)},${obj.yScale(d.age)})`);
-
-        // all legend stuff is hidden
     }
+}
+
+function setUpLegend(){
+    d3.select('#g-legend')
+        .attr('transform',`translate(${obj.xScale(obj.animalMax.duration)},${obj.yScale(obj.animalMax.age)})`);
+    d3.select('#g-size-legend')
+        .attr('transform','translate(-200,-30)');
+    d3.select('#g-color')
+        .attr('transform','translate(-200,10)');
+    d3.select('#g-species')
+        .attr('transform','translate(120,-30)');
+    d3.select('#g-gender')
+        .attr('transform','translate(120,20)');
+
+    d3.selectAll('.size-legend-circle')
+        .classed('size-legend-circle-active',function(){
+            let active;
+            thisId = d3.select(this).attr('id');
+            if(thisId == 'legend-circle-small'){
+                active = (obj.animalMax.weightCat == 'small') ? true : false;
+            }else if(thisId == 'legend-circle-medium'){
+                active = (obj.animalMax.weightCat == 'medium') ? true : false;
+            }else{
+                active = (obj.animalMax.weightCat == 'large') ? true : false;
+            }
+            return active;
+    })
+    d3.select('#g-species').selectAll('.legend-text')
+        .classed('bold', function(){
+            const id = d3.select(this).html();
+            return (obj.animalMax.species.toLowerCase() == id) ? true : false;
+        });
+
+    d3.select('#g-gender').selectAll('.legend-text')
+        .classed('bold', function(){
+            const id = d3.select(this).html();
+            return (obj.animalMax.gender.toLowerCase() == id) ? true : false;
+        });
+
+    d3.selectAll('.g-trait')
+        .each(function(d,i){
+            const degrees = ((72*i)+15);
+            const radians = ((degrees * Math.PI) / 180) - (Math.PI/2);
+            const radius = (heightMap.get('5') + 10) * 2
+            const x = (radius + 10) * Math.cos(radians);
+            const y = (radius + 10) * Math.sin(radians);
+            d3.select(this).attr('transform',`translate(${x},${y})`);
+        })
+}
+
+function activateTooltip(data){
+    const tooltip = d3.select('#tooltip');
+    // display tooltip
+    tooltip.classed('hidden',false);
+
+    // trait descriptions
+
+    // position tooltip
+    const tooltipNode = tooltip.node().getBoundingClientRect();
+    const portraitNode = d3.select(`#portrait-${data.id}`).node().getBoundingClientRect();
+    const portraitCY = d3.select(`#portrait-${data.id}`).select('.species').node().getBoundingClientRect().y + 5;
+    const portraitCX = d3.select(`#portrait-${data.id}`).select('.species').node().getBoundingClientRect().x + 5;
+    const svgNode = d3.select('#chart').node().getBoundingClientRect();
+    const svgCX = svgNode.x + (svgNode.width/2);
+    const svgCY = svgNode.y + (svgNode.height/2);
+    const tooltipDelta = window.innerHeight - (portraitCY-35+tooltipNode.height);
+
+    tooltip
+        .style('left', (portraitCX < svgCX) ? (portraitNode.x + portraitNode.width + 20) +'px' : (portraitNode.x - 20 - 225) +'px')
+        .style('top', (tooltipDelta > 0) ? (portraitCY-35)+'px' : (portraitCY-35+tooltipDelta)+'px');
+
+    d3.select('#tooltip-arrow')
+        .classed('arrow-right', (portraitCX < svgCX) ? false : true)
+        .classed('arrow-left', (portraitCX < svgCX) ? true : false)
+        .style('top', (portraitCY-10)+'px')
+        .style('left', (portraitCX < svgCX) ? (portraitNode.x + portraitNode.width + 10) +'px' : (portraitNode.x - 20) +'px')
+
+    // populate content
+    tooltip.select('#tooltip-name').html(data.name);
+    // dog versus cat icon
+    tooltip.select('#icon-extraSpecies')
+        .attr('src', `./assets/icons/${data.species}.svg`);
+
+    // demographic svgs
+    tooltip.select('#demo-desc-species').select('circle')
+        .classed('dog', (data.species.toLowerCase() == 'dog') ? true : false);
+    tooltip.select('#demo-desc-gender').select('line')
+        .classed('female', (data.gender.toLowerCase() == 'female') ? true : false);
+    tooltip.select('#demo-desc-size').selectAll('circle')
+        .classed('tooltip-size-active',function(){
+            const id = d3.select(this).attr('id');
+            return (id == data.weightCat) ? true : false;
+        });
+
+    // demographic text
+    tooltip.select('#demo-desc-species').select('p')
+        .html(data.species.toLowerCase());
+    tooltip.select('#demo-desc-gender').select('p')
+        .html(data.gender.toLowerCase());
+    tooltip.select('#demo-desc-size').select('p')
+        .html(`${data.weightCat}-sized`);
+    tooltip.select('#demo-desc-color').select('p')
+        .html(`${data.colorCat}-colored`);
+
+}
+
+function enablePortraitInteractions(){
+    svg.selectAll('.portrait')
+        .style('cursor','pointer')
+        .on('mouseenter',function(d){
+            activateTooltip(d);
+        })
+        .on('mouseleave',function(d){
+            d3.select('#tooltip').classed('hidden',true);
+            d3.select('#tooltip-arrow')
+                .classed('arrow-right', false)
+                .classed('arrow-left', false);
+        })
+        .on('click',function(d){
+            console.log(d);
+            const name = d.name.toUpperCase();
+            d3.select('#sidebar-header').html(`${name}`);
+            d3.select('#content-animal-selected').classed('hidden',false);
+            d3.select('#filter-toggle').classed('hidden',true);
+            d3.select('#content-filters').classed('hidden',true);
+        });
 }

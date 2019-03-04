@@ -7,19 +7,42 @@
 
     <title>Pets In Need</title>
     <link href="style.css" rel="stylesheet"/>
-
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   </head>
   <body>
+    <!-- Modal -->
+    <div class="modal fade" id="info-modal" tabindex="-1" role="dialog" aria-labelledby="info-modal-title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header" id="pin-modal-header">
+            <h5 class="modal-title" id="info-modal-title">INFORMATION</h5>
+            <!-- <button type="button" data-dismiss="modal" aria-label="close" class="material-btn"> -->
+              <i data-dismiss="modal" class="btn-close material-icons md-24 color444444">close</i>
+            <!-- </button> -->
+          </div>
+          <div class="modal-body" id="pin-modal-body">
+            <h4>Worthy & Waiting</h4>
+            <p>
+                This project emphasizes the long-stay animals at Pets in Need. The animals are represented as “data portraits” with physical and personality characteristics encoded for each animal. Animals include both the adoptable and adopted, to show that long-stay animals make great companions.
+                <br><br>Data last updated <span id="span-file-date">(date here)</span>.
+                <br><br>In collaboration with <a href="https://sarahsoup.com" target="_blank" class="pin-link">Sarah Campbell</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="container-fluid">
       <div class="row">
         <div class="col-4" id="sidebar">
           <div class="row">
             <div class="col-12 col-md-10 offset-md-2 head">
-              <img id="logo" src="assets/logo_color.png">
+              <a href="https://www.petsinneed.org/">
+                <img id="logo" src="assets/logo_color.png">
+              </a>
             </div>
           </div>
           <div class="row">
@@ -93,6 +116,12 @@
                     </form>
                     <a class="pin-link acumin" id="filter-clear">clear filters</a>
                   </div>
+                  <div id="content-success-stories" class="hidden">
+                    <p>content coming soon</p>
+                  </div>
+                  <div id="content-animal-selected" class="hidden">
+                    <p>content coming soon</p>
+                  </div>
                   <div id="content-how-to-read" class="hidden">
                     <p class="step" id="step-1">
                       Each animal is represented by a sunburst. Its position is based on its <span class="bold">age in years</span>, and <span class="bold">months in the shelter</span>.
@@ -120,19 +149,160 @@
             <div class="col-12 head">
               <div class="right">
                   <button type="button" id="btn-read" class="btn pin-btn acumin">HOW TO READ</button>
-                  <button type="button" id="btn-info" class="btn pin-btn info">i</button>
+                  <button type="button" id="btn-info" class="btn pin-btn info" data-toggle="modal" data-target="#info-modal">i</button>
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col-12">
-                <svg id="chart"></svg>
+                <svg id="chart">
+                  <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" style="stop-color:#A06D8F;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#E8928C;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <g id="x-scale"></g>
+                  <g id="y-scale"></g>
+                  <g id="g-legend" class="hidden">
+                    <text class="legend htr-1" id="text-age"></text>
+                    <text class="legend htr-1" id="text-duration"></text>
+                    <g class="legend htr-2" id="g-size">
+                      <g id="g-size-background">
+                        <circle class="size-background-circle" id="background-circle-small" cx="0" cy="0"></circle>
+                        <circle class="size-background-circle" id="background-circle-medium" cx="0" cy="0"></circle>
+                        <circle class="size-background-circle" id="background-circle-large" cx="0" cy="0"></circle>
+                      </g>
+                      <g id="g-size-legend">
+                        <text class="legend-text" id="text-size" x="0" y="0" dy="0.35em">size</text>
+                        <circle class="size-legend-circle" id="legend-circle-small" cx="60" cy="0" r="6"></circle>
+                        <circle class="size-legend-circle" id="legend-circle-medium" cx="60" cy="0" r="13"></circle>
+                        <circle class="size-legend-circle" id="legend-circle-large" cx="60" cy="0" r="20"></circle>
+                      </g>
+                      <path class="legend-arrow" id="size-arrow"></path>
+                    </g>
+                    <g class="legend htr-2" id="g-color">
+                      <text class="legend-text" id="text-color" x="0" y="1em">fur color</text>
+                      <rect id="rect-color" fill="url(#gradient)" x="0" y="24" width="80" height="10"></rect>
+                      <line class="legend-line" id="rect-color-indicator" x1="0" x2="0" y1="21" y2="37"></line>
+                      <text class="legend-text" id="text-color-dark" x="0" y="48" dy="0.35em">dark</text>
+                      <text class="legend-text" id="text-color-light" x="80" y="48" dy="0.35em">light</text>
+                    </g>
+                    <g class="legend htr-2" id="g-species">
+                      <text class="legend-text" id="text-dog" x="25" y="-12" dy="0.35em">dog</text>
+                      <text class="legend-text" id="text-cat" x="25" y="12" dy="0.35em">cat</text>
+                      <circle class="species-legend-circle" id="legend-circle-dog" cx="7" cy="-12" r="5"></circle>
+                      <circle class="species-legend-circle" id="legend-circle-cat" cx="7" cy="12" r="5"></circle>
+                      <path class="legend-arrow" id="species-arrow"></path>
+                    </g>
+                    <g class="legend htr-2" id="g-gender">
+                      <text class="legend-text" id="text-male" x="25" y="0" dy="1em">male</text>
+                      <text class="legend-text" id="text-female" x="25" y="25" dy="1em">female</text>
+                      <line class="legend-line" id="legend-line-male" x1="0" x2="15" y1="15" y2="0"></line>
+                      <line class="legend-line" id="legend-line-female" x1="0" x2="15" y1="40" y2="25"></line>
+                      <path class="legend-arrow" id="species-arrow"></path>
+                    </g>
+                    <g class="legend htr-3" id="g-traits">
+                        <circle class="size-background-circle" id="background-circle-1" cx="0" cy="0"></circle>
+                        <circle class="size-background-circle" id="background-circle-2" cx="0" cy="0"></circle>
+                        <circle class="size-background-circle" id="background-circle-3" cx="0" cy="0"></circle>
+                        <circle class="size-background-circle" id="background-circle-4" cx="0" cy="0"></circle>
+                        <circle class="size-background-circle" id="background-circle-5" cx="0" cy="0"></circle>
+                        <g class="g-trait" id="g-extraSpecies">
+                          <image id="htr-icon-extraDog" class="legend-icon htr-icon-extraSpecies" x="0" y="-8" xlink:href="./assets/icons/dog.svg"></image>
+                          <line class="legend-line" x1="20" x2="28" y1="8" y2="-8"></line>
+                          <image id="htr-icon-extraCat" class="legend-icon htr-icon-extraSpecies" x="32" y="-8" xlink:href="./assets/icons/cat.svg"></image>
+                          <text class="legend-text" x="60" y="0" dy="0.35em">extraversion <tspan x="61" dy="1.2em">towards same species</tspan></text>
+                        </g>
+                        <g class="g-trait" id="g-extraHumans">
+                          <image id="htr-icon-extraHumans" class="legend-icon" x="0" y="-12" xlink:href="./assets/icons/person.svg"></image>
+                          <text class="legend-text" x="24" y="0" dy="0.35em">extraversion <tspan x="25" dy="1.2em">towards humans</tspan></text>
+                        </g>
+                        <g class="g-trait" id="g-energy">
+                          <image id="htr-icon-energy" class="legend-icon" x="0" y="-10" xlink:href="./assets/icons/energy.svg"></image>
+                          <text class="legend-text" x="23" y="0" dy="0.35em">energy</text>
+                        </g>
+                        <g class="g-trait" id="g-openness">
+                          <image id="htr-icon-openness" class="legend-icon" x="-16" y="-8" xlink:href="./assets/icons/magnifying_glass.svg"></image>
+                          <text class="legend-text anchor-end" x="-25" y="0" dy="0.35em">curiosity</text>
+                        </g>
+                        <g class="g-trait" id="g-affection">
+                          <image id="htr-icon-affection" class="legend-icon" x="-16" y="-8" xlink:href="./assets/icons/heart.svg"></image>
+                          <text class="legend-text anchor-end" x="-25" y="0" dy="0.35em">affection</text>
+                        </g>
+                    </g>
+                  </g>
+                </svg>
             </div>
           </div>
         </div>
+      </div>
     </div>
-
+    <div id="tooltip-arrow"></div>
+    <div id="tooltip" class="hidden">
+      <h2 id="tooltip-name"></h2>
+      <div class="icon-desc">
+        <img id="icon-extraSpecies"> 
+        <p class="tooltip-p" id="tooltip-extaSpecies">trait description</p>
+      </div>
+      <div class="icon-desc">
+        <img id="icon-extraHumans" src="./assets/icons/person.svg"> 
+        <p class="tooltip-p" id="tooltip-extaHumans">trait description</p>
+      </div>
+      <div class="icon-desc">
+        <img id="icon-openness" src="./assets/icons/magnifying_glass.svg"> 
+        <p class="tooltip-p" id="tooltip-openness">trait description</p>
+      </div>
+      <div class="icon-desc">
+        <img id="icon-energy" src="./assets/icons/energy.svg"> 
+        <p class="tooltip-p" id="tooltip-energy">trait description</p>
+      </div>
+      <div class="icon-desc">
+        <img id="icon-affection" src="./assets/icons/heart.svg"> 
+        <p class="tooltip-p" id="tooltip-affection">trait description</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="demo-desc" id="demo-desc-species">
+        <svg class="tooltip-svg">
+          <circle cx="9" cy="10" r="4"></circle>
+        </svg>
+        <p class="tooltip-p" id="tooltip-species"></p>
+      </div>
+      <div class="demo-desc" id="demo-desc-gender">
+        <svg class="tooltip-svg">
+          <line x1="2" x2="14" y1="14" y2="2"></line>
+        </svg>
+        <p class="tooltip-p" id="tooltip-gender"></p>
+      </div>
+      <div class="demo-desc" id="demo-desc-size">
+        <svg class="tooltip-svg">
+          <circle id="small" cx="9" cy="9" r="2"></circle>
+          <circle id="medium" cx="9" cy="9" r="5"></circle>
+          <circle id="large" cx="9" cy="9" r="8"></circle>
+        </svg>
+        <p class="tooltip-p" id="tooltip-size"></p>
+      </div>
+      <div class="demo-desc" id="demo-desc-color">
+        <svg class="tooltip-svg">
+          <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color:#A06D8F;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#E8928C;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <rect fill="url(#gradient)" x="0" y="7" width="20" height="6"></rect>
+          <line x1="10" x2="10" y1="5" y2="15"></line>
+        </svg>
+        <p class="tooltip-p" id="tooltip-color"></p>
+      </div>
+    </div>
   </body>
   <script src="https://d3js.org/d3.v5.min.js"></script>
+  <!-- jQuery and Popper.js for Bootstrap -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <!-- Bootstrap -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
   <script src="script.js"></script>
 </html>
