@@ -17,9 +17,51 @@ body {
     font-family: acumin-pro-extra-condensed, 'Barlow Condensed', sans-serif; */
 }
 
-/* .acumin {
-  font-family: acumin-pro;
-} */
+#splash {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 10;
+}
+
+#splash .row {
+    height: 100vh;
+    background-color: #ffffff;
+}
+
+#content-container {
+    text-align: center;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#content-container h1 {
+    font-size: 60pt;
+    color: #444444;
+    line-height: 0.8em;
+}
+
+#content-container p {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#ampersand {
+    font-size: 40pt;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: center;
+}
+
+#btn-adopt, #btn-ss {
+    width: 245px;
+    display: block;
+    margin-bottom: 20px;
+    margin-right: 0px;
+}
 
 .acumin-cond {
     font-family: acumin-pro-extra-condensed;
@@ -46,16 +88,27 @@ body {
     font-family: 'Baskerville';
 }
 
+#sidebar {
+    background: #F5F9FF;
+}
+
 .head {
     padding-top: 25px;
     min-height: 60px;
 }
 
-#sidebar {
-    background: #F5F9FF;
+.head p {
+    float: left;
+    padding-left: 20px;
+    padding-top: 12px;
+    margin-bottom: 0px;
+    font-weight: 600;
+    font-size: 10pt;
+    text-transform: uppercase;
 }
 
 #logo {
+    float: left;
     width: 80px;
     cursor: pointer;
 }
@@ -64,10 +117,18 @@ body {
     float: right;
 }
 
-.pin-btn {
+.left {
+    float: left;
+}
+
+#proj-name-sidebar, .slider-labels, .pin-btn, .axis-label {
+    text-transform: uppercase;
     font-size: 10pt !important;
     font-weight: 600 !important;
     letter-spacing: 0.5px;
+}
+
+.pin-btn {
     color: #1A5289 !important;
     padding: 12px 24px !important;
     border-radius: 30px !important;
@@ -76,6 +137,7 @@ body {
 }
 
 #btn-info {
+    text-transform: none !important;
     padding: 0px 0px !important;
     font-size: 12pt !important;
 }
@@ -85,7 +147,7 @@ body {
     box-shadow: none !important;
 }
 
-.pin-btn-active {
+.pin-btn-active, .pin-btn:hover {
     background-color: #1A5289 !important;
     color: white !important;
 }
@@ -168,14 +230,22 @@ body {
     margin: 60px 0px;
 }
 
+.content-shift-up {
+    margin: 30px 0px 60px 0px !important;
+}
+
 #content-filters {
     overflow-y: scroll;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 12pt;
 }
 
 #content-filters p {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+}
+
+.filter-trait {
+    margin: 30px 0px;
 }
 
 #content-how-to-read p {
@@ -183,73 +253,97 @@ body {
     margin-bottom: 40px;
 }
 
+#content-animal-selected img {
+    height: 150px;
+    width: 150px;
+}
+
+#content-desc {
+    overflow-y: scroll;
+    font-size: 12pt;
+}
+
 /* FILTER LIST */
-ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
 
-ul li {
-    position: relative;
-    display: block;
-}
-
-ul li input[type=radio] {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background: none;
-    cursor: pointer;
-    margin: 0px 0px;
-}
-
-ul li label {
-    padding-left: 30px;
-    display: inline-block;
+#filter-dogs, #filter-cats {
     cursor: pointer;
 }
 
-ul li input[type=radio],
-ul li label::before,
-ul li label::after {
-    border: 2px solid;
-	height: 18px;
-	left: .125em;
-	position: absolute;
-	top: 4px;
-    width: 18px;
-    border-radius: 100%;
-	content: '';
+#filter-dogs {
+    margin-bottom: 10px;
+    width: 80px;
 }
 
-ul li label::after {
-    border-color: #1A5289;
+#filter-dogs p {
+    padding-left: 26px;
 }
 
-ul li label::before {
-	border-color: transparent;
-	box-shadow: 0 0 0 0px rgba(0,0,0,0);    
+#filter-cats p {
+    padding-left: 106px;
 }
 
-ul li input:checked ~ label::before {
-    border-color: transparent;
-	box-shadow: 0 0 0 2px #1A5289;
+.radio-btn {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #1A5289;
+    margin-top: 2px;
 }
 
-ul li input:focus {
+.radio-inner {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-top: 3px;
+    margin-left: 3px;
+}
+
+.clicked {
+    background-color: #1A5289;
+}
+
+.noUi-target {
+    background: #F5F9FF !important;
+    border: 2px solid #1A5289 !important;
+    border-radius: 10px !important;
+    box-shadow: none !important;
+    margin: 20px 20px 10px 10px !important;
+}
+
+.noUi-horizontal {
+    height: 10px !important;
+}
+
+.noUi-connect {
+    background: #1A5289 !important;
+}
+
+.noUi-handle {
+    width: 20px !important;
+    height: 20px !important;
+    background: #F5F9FF !important;
+    border: 2px solid #1A5289 !important;
+    border-radius: 50% !important;
+    box-shadow: none !important;
+    cursor: pointer !important;
+}
+
+html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
+    right: -10px !important;
+    left: auto;
+}
+
+.noUi-handle:focus {
     outline: none !important;
 }
 
-ul li input:focus ~ label::before {
-	border-color: transparent;
-	box-shadow: 0 0 0 2px #1A5289;
+.noUi-handle:after, .noUi-handle:before {
+    display: none !important;
 }
 
-ul li input:checked ~ label::after {
-	border-color: #F5F9FF;
-	border-width: 4px;
-	box-shadow: inset 0 0 0 6px #1A5289;
+.slider-labels {
+    padding-left: 10px;
+    padding-right: 20px;
 }
 
 /* HOW TO READ */
@@ -279,7 +373,7 @@ ul li input:checked ~ label::after {
     stroke-width: 0.5px;
 }
 
-.size-legend-circle, .legend-line {
+.size-legend-circle, .legend-line, .tooltip-line {
     fill: none;
     stroke: #444444;
     stroke-width: 1px;
@@ -330,9 +424,20 @@ ul li input:checked ~ label::after {
 
 /* CHART */
 
-#chart {
+/* #chart {
     width: 100%;
     height: 90vh;
+} */
+
+#background {
+    fill: white;
+}
+
+#no-match {
+    text-anchor: middle;
+    font-size: 12pt;
+    font-weight: 600;
+    opacity: 0.4;
 }
 
 .hidden {
@@ -340,10 +445,7 @@ ul li input:checked ~ label::after {
 }
 
 .axis-label {
-    font-size: 11pt;
-    font-weight: 600;
     text-anchor: middle;
-    text-transform: uppercase;
     fill: #444444;
     opacity: 0.4;
 }
@@ -395,7 +497,7 @@ ul li input:checked ~ label::after {
 }
 
 /* TOOLTIP */
-#tooltip, #tooltip-arrow {
+#tooltip, #tooltip-arrow, #tooltip-icons, #tooltip-icons .icon-container, #div-test {
     position: absolute;
 }
 
@@ -412,33 +514,33 @@ ul li input:checked ~ label::after {
     font-weight: 600;
 }
 
-#icon-extraSpecies {
+.width-12 {
     width: 12px;
 }
 
-#icon-extraHumans {
+.width-8 {
     width: 8px;
+}
+
+#div-test {
+    background-color: blue;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    top: -5px;
+    left: -5px;
+}
+
+#icon-extraHumans {
     margin-left: 2px;
     margin-right: 2px;
 }
 
-#icon-openness {
-    width: 12px;
-}
-
-#icon-energy {
-    width: 12px;
-}
-
-#icon-affection {
-    width: 12px;
-}
-
 .tooltip-p {
-    font-size: 10pt;
+    font-size: 8pt;
     display: inline-block;
     padding-left: 12px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .demo-desc p {
@@ -481,28 +583,70 @@ ul li input:checked ~ label::after {
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-bottom: 10px solid #F7F7F7;
-  }
+}
   
-  .arrow-down {
+.arrow-down {
     width: 0; 
     height: 0; 
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-top: 10px solid #F7F7F7;
-  }
-  
-  .arrow-right {
+}
+
+.arrow-right {
     width: 0; 
     height: 0; 
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
     border-left: 10px solid #F7F7F7;
-  }
-  
-  .arrow-left {
+}
+
+.arrow-left {
     width: 0; 
     height: 0; 
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent; 
     border-right:10px solid #F7F7F7; 
-  }
+}
+
+/**********/
+/* MOBILE */
+/**********/
+
+@media (max-width: 575.98px) {
+    #sidebar {
+        position: absolute;
+        z-index: 8;
+    }
+
+    #sidebar-toggle {
+        background-color: #F5F9FF;
+        position: absolute;
+        top: 30px;
+        height: 40px;
+        width: 40px;
+        cursor: pointer;
+    }
+
+    #sidebar-toggle i {
+        padding: 8px 8px;
+    }
+
+    #sidebar-header {
+        font-size: 30pt;
+        margin-bottom: 10px;
+    }
+
+    .pin-link {
+        font-size: 10pt;
+    }
+
+    .radio-btn {
+        margin-top: 0px;
+    }
+
+    #content-filters {
+        /* font-weight: 600; */
+        font-size: 10pt;
+    }
+}

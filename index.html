@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- NoUiSlider -->
+    <link href="slider/nouislider.min.css" rel="stylesheet">
 
   </head>
   <body>
@@ -20,9 +22,7 @@
         <div class="modal-content">
           <div class="modal-header" id="pin-modal-header">
             <h5 class="modal-title" id="info-modal-title">INFORMATION</h5>
-            <!-- <button type="button" data-dismiss="modal" aria-label="close" class="material-btn"> -->
               <i data-dismiss="modal" class="btn-close material-icons md-24 color444444">close</i>
-            <!-- </button> -->
           </div>
           <div class="modal-body" id="pin-modal-body">
             <h4>Worthy & Waiting</h4>
@@ -35,92 +35,92 @@
         </div>
       </div>
     </div>
+    <div id="splash" class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col-10 col-md-8">
+          <div id="content-container">
+              <h1 class="acumin-cond">WORTHY<br><span id="ampersand">&</span><br>WAITING</h1>
+              <p>Take a look at our long-stay <br>animals in a new way.</p>
+              <div class="btn-container">
+                  <button type="button" id="btn-adopt" class="btn pin-btn acumin">ADOPTABLES</button>
+              </div>
+              <div class="btn-container">
+                  <button type="button" id="btn-ss" class="btn pin-btn acumin">SUCCESS STORIES</button>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="container-fluid">
       <div class="row">
-        <div class="col-4" id="sidebar">
+        <div class="col-9 col-sm-4" id="sidebar">
           <div class="row">
-            <div class="col-12 col-md-10 offset-md-2 head">
+            <div class="col-11 offset-1 col-md-10 offset-md-2 head">
               <a href="https://www.petsinneed.org/">
                 <img id="logo" src="assets/logo_color.png">
               </a>
+              <p id="proj-name-sidebar">Worthy & Waiting</p>
             </div>
           </div>
           <div class="row">
-            <div class="col-12 col-md-9 offset-md-2">
+            <div class="col-10 offset-1 col-md-9 offset-md-2">
                 <h1 id="sidebar-header" class="acumin-cond">ADOPTABLES</h1>
                 <a class="pin-link acumin" id="filter-toggle">view success stories</a>
                 <div id="sidebar-content">
                   <div id="content-filters">
-                    <p>Show me...</p>
-                    <form class="filter-form">
-                      <ul>
-                          <li>
-                              <input type="radio" name="filter" id="dogs">
-                              <label for="dogs">Dogs</label>
-                          </li>
-                          <li>
-                              <input type="radio" name="filter" id="cats">
-                              <label for="cats">Cats</label>
-                          </li>
-                      </ul>
-                    </form>
-                      <p>I live in a(n)...</p>
-                      <form class="filter-form">
-                        <ul>
-                            <li>
-                                <input type="radio" name="filter" id="apt">
-                                <label for="apt">Apartment</label>
-                            </li>
-                            <li>
-                                <input type="radio" name="filter" id="condo">
-                                <label for="condo">Condo/townhome</label>
-                            </li>
-                            <li>
-                              <input type="radio" name="filter" id="house">
-                              <label for="house">House with a yard</label>
-                          </li>
-                        </ul>
-                    </form>
-                    <p>I am...</p>
-                    <form class="filter-form">
-                      <ul>
-                          <li>
-                              <input type="radio" name="filter" id="otg">
-                              <label for="otg">On the go</label>
-                          </li>
-                          <li>
-                              <input type="radio" name="filter" id="busy">
-                              <label for="busy">Busy but with free time</label>
-                          </li>
-                          <li>
-                            <input type="radio" name="filter" id="laid-back">
-                            <label for="laid-back">Totally laid back</label>
-                        </li>
-                      </ul>
-                    </form>
-                    <form class="filter-form">
-                      <ul>
-                          <li>
-                              <input type="radio" name="filter" id="new">
-                              <label for="new">A new dog/cat owner</label>
-                          </li>
-                          <li>
-                              <input type="radio" name="filter" id="recent">
-                              <label for="recent">A recent dog/cat owner (in the last 3 years)</label>
-                          </li>
-                          <li>
-                            <input type="radio" name="filter" id="experienced">
-                            <label for="experienced">Highly experienced with dogs/cats with challenging behaviors</label>
-                        </li>
-                      </ul>
-                    </form>
+                    <div id="filter-species">
+                        <div id="filter-dogs" class="left">
+                          <div class="radio-btn left">
+                            <div class="radio-inner clicked"></div>
+                          </div>
+                          <p>Dogs</p>
+                        </div>
+                        <div id="filter-cats">
+                          <div class="radio-btn left">
+                            <div class="radio-inner clicked"></div>
+                          </div>
+                          <p>Cats</p>
+                        </div>
+                    </div>
+                    <div class="filter-trait">
+                        <p>Extraversion towards same species</p>
+                        <div class="slider" id="slider-species"></div>
+                        <p class="slider-labels">Modest<span class="right">Outgoing</span></p>
+                    </div>
+                    <div class="filter-trait">
+                        <p>Extraversion towards people</p>
+                        <div class="slider" id="slider-humans"></div>
+                        <p class="slider-labels">Modest<span class="right">Outgoing</span></p>
+                    </div>
+                    <div class="filter-trait">
+                        <p>Energy level</p>
+                        <div class="slider" id="slider-energy"></div>
+                        <p class="slider-labels">Laid-back<span class="right">Active</span></p>
+                    </div>
+                    <div class="filter-trait">
+                        <p>Openness</p>
+                        <div class="slider" id="slider-openness"></div>
+                        <p class="slider-labels">Careful<span class="right">Curious</span></p>
+                    </div>
+                    <div class="filter-trait">
+                        <p>Affection</p>
+                        <div class="slider" id="slider-affection"></div>
+                        <p class="slider-labels">Casual<span class="right">Cuddler</span></p>
+                    </div>
                     <a class="pin-link acumin" id="filter-clear">clear filters</a>
                   </div>
                   <div id="content-success-stories" class="hidden">
                     <p>content coming soon</p>
                   </div>
                   <div id="content-animal-selected" class="hidden">
-                    <p>content coming soon</p>
+                    <img>
+                    <div class="spacer"></div>
+                    <div id="content-desc">
+                        <p id="animal-desc">content coming soon</p>
+                        <p id="visit-desc">Visit us to learn more about <span class="span-name">this animal</span>.
+                          <br>871 5th Avenue, Redwood City, CA
+                          <br>Open weekdays 12:00-5:00 pm and weekends 10:00 am-5:00 pm.</p>
+                    </div>
                   </div>
                   <div id="content-how-to-read" class="hidden">
                     <p class="step" id="step-1">
@@ -144,7 +144,7 @@
             </div>
           </div>
         </div>
-        <div class="col-8" id="chart-col">
+        <div class="col-11 offset-1 col-sm-8 offset-sm-0" id="chart-col">
           <div class="row">
             <div class="col-12 head">
               <div class="right">
@@ -162,6 +162,8 @@
                       <stop offset="100%" style="stop-color:#E8928C;stop-opacity:1" />
                     </linearGradient>
                   </defs>
+                  <rect id="background" x="0" y="0"></rect>
+                  <text id="no-match" class="hidden no-match" dy="-2em">None of our current long-stay <tspan class="no-match" dy="-0.5em">adoptables match your search.</tspan></text>
                   <g id="x-scale"></g>
                   <g id="y-scale"></g>
                   <g id="g-legend" class="hidden">
@@ -216,7 +218,7 @@
                         </g>
                         <g class="g-trait" id="g-extraHumans">
                           <image id="htr-icon-extraHumans" class="legend-icon" x="0" y="-12" xlink:href="./assets/icons/person.svg"></image>
-                          <text class="legend-text" x="24" y="0" dy="0.35em">extraversion <tspan x="25" dy="1.2em">towards humans</tspan></text>
+                          <text class="legend-text" x="24" y="0" dy="0.35em">extraversion <tspan x="25" dy="1.2em">towards people</tspan></text>
                         </g>
                         <g class="g-trait" id="g-energy">
                           <image id="htr-icon-energy" class="legend-icon" x="0" y="-10" xlink:href="./assets/icons/energy.svg"></image>
@@ -224,7 +226,7 @@
                         </g>
                         <g class="g-trait" id="g-openness">
                           <image id="htr-icon-openness" class="legend-icon" x="-16" y="-8" xlink:href="./assets/icons/magnifying_glass.svg"></image>
-                          <text class="legend-text anchor-end" x="-25" y="0" dy="0.35em">curiosity</text>
+                          <text class="legend-text anchor-end" x="-25" y="0" dy="0.35em">openness</text>
                         </g>
                         <g class="g-trait" id="g-affection">
                           <image id="htr-icon-affection" class="legend-icon" x="-16" y="-8" xlink:href="./assets/icons/heart.svg"></image>
@@ -238,27 +240,45 @@
         </div>
       </div>
     </div>
+    <div id="tooltip-icons" class="hidden">
+      <!-- <div id="div-test"></div> -->
+      <div class="icon-container width-12">
+        <image id="tooltip-icon-extraSpecies" class="width-12"></image>
+      </div>
+      <div class="icon-container width-8">
+        <image class="tooltip-icon" id="tooltip-icon-extraHumans" class="width-8" src="./assets/icons/person.svg"></image>
+      </div>
+      <div class="icon-container width-12">
+        <image class="tooltip-icon" id="tooltip-icon-energy" class="width-12" src="./assets/icons/energy.svg"></image>
+      </div>
+      <div class="icon-container width-12">
+        <image class="tooltip-icon" id="tooltip-icon-openness" class="width-12" src="./assets/icons/magnifying_glass.svg"></image>
+      </div>
+      <div class="icon-container width-12">
+        <image class="tooltip-icon" id="tooltip-icon-affection" class="width-12" src="./assets/icons/heart.svg"></image>
+      </div>
+    </div>
     <div id="tooltip-arrow"></div>
     <div id="tooltip" class="hidden">
       <h2 id="tooltip-name"></h2>
       <div class="icon-desc">
-        <img id="icon-extraSpecies"> 
+        <img id="icon-extraSpecies" class="width-12"> 
         <p class="tooltip-p" id="tooltip-extaSpecies">trait description</p>
       </div>
       <div class="icon-desc">
-        <img id="icon-extraHumans" src="./assets/icons/person.svg"> 
+        <img id="icon-extraHumans" class="width-8" src="./assets/icons/person.svg"> 
         <p class="tooltip-p" id="tooltip-extaHumans">trait description</p>
       </div>
       <div class="icon-desc">
-        <img id="icon-openness" src="./assets/icons/magnifying_glass.svg"> 
+        <img id="icon-openness" class="width-12" src="./assets/icons/magnifying_glass.svg"> 
         <p class="tooltip-p" id="tooltip-openness">trait description</p>
       </div>
       <div class="icon-desc">
-        <img id="icon-energy" src="./assets/icons/energy.svg"> 
+        <img id="icon-energy" class="width-12" src="./assets/icons/energy.svg"> 
         <p class="tooltip-p" id="tooltip-energy">trait description</p>
       </div>
       <div class="icon-desc">
-        <img id="icon-affection" src="./assets/icons/heart.svg"> 
+        <img id="icon-affection" class="width-12" src="./assets/icons/heart.svg"> 
         <p class="tooltip-p" id="tooltip-affection">trait description</p>
       </div>
       <div class="spacer"></div>
@@ -270,7 +290,7 @@
       </div>
       <div class="demo-desc" id="demo-desc-gender">
         <svg class="tooltip-svg">
-          <line x1="2" x2="14" y1="14" y2="2"></line>
+          <line class="tooltip-line" x1="2" x2="14" y1="14" y2="2"></line>
         </svg>
         <p class="tooltip-p" id="tooltip-gender"></p>
       </div>
@@ -291,10 +311,13 @@
             </linearGradient>
           </defs>
           <rect fill="url(#gradient)" x="0" y="7" width="20" height="6"></rect>
-          <line x1="10" x2="10" y1="5" y2="15"></line>
+          <line class="tooltip-line" x1="10" x2="10" y1="5" y2="15"></line>
         </svg>
         <p class="tooltip-p" id="tooltip-color"></p>
       </div>
+    </div>
+    <div id="sidebar-toggle" class="hidden">
+        <i class="material-icons md-24 color444444">keyboard_arrow_right</i>
     </div>
   </body>
   <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -303,6 +326,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <!-- Bootstrap -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <!-- NoUiSlider -->
+  <script src="slider/nouislider.min.js"></script>
 
   <script src="script.js"></script>
 </html>
