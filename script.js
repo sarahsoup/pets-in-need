@@ -33,7 +33,7 @@ const padding = 15 * 2; // designated by bootstrap
 let obj = {};
 obj.xScale = d3.scaleLinear();
 obj.yScale = d3.scaleLinear();
-obj.m = { l: 50, t: 50, r: 50, b: 80 };
+// obj.m = { l: 50, t: 50, r: 50, b: 80 };
 
 // other variables
 const dimmed = 0.4;
@@ -508,8 +508,6 @@ function resize() {
         obj.m = { l: 50, t: 50, r: 50, b: 80 };
     }
 
-    console.log(obj.m.b);
-
     // mobile specific
     d3.select('#proj-name-sidebar').html((obj.isMobile == 1) ? 'w & w' : 'worthy & waiting');
 
@@ -921,13 +919,13 @@ function howToRead(direction){
             d3.select('#g-legend')
                 .attr('transform',`translate(${obj.xScale(obj.animalMax.duration)},${obj.yScale(obj.animalMax.age)})`);
             d3.select('#text-age')
-                .attr('x',-(obj.xScale(obj.animalMax.duration)-m.l+12))
+                .attr('x',-(obj.xScale(obj.animalMax.duration)-obj.m.l+12))
                 .attr('y',0)
                 .attr('dy','0.32em') // manual adjustment
                 .text(obj.animalMax.age.toFixed(1));
             d3.select('#text-duration')
                 .attr('x',0)
-                .attr('y',obj.chartH - m.b - m.t - obj.yScale(obj.animalMax.age) + 9)
+                .attr('y',obj.chartH - obj.m.b - obj.yScale(obj.animalMax.age) + 9)
                 .attr('dy','0.71em') // manual adjustment
                 .text(obj.animalMax.duration.toFixed(0));
         }else{
@@ -950,10 +948,10 @@ function howToRead(direction){
                 .attr('transform',`translate(${obj.xScale(obj.animalMax.duration)},${obj.yScale(obj.animalMax.age)})`);
             d3.select('#text-age')
                 .transition()
-                .attr('x',-(obj.xScale(obj.animalMax.duration)-m.l+12));
+                .attr('x',-(obj.xScale(obj.animalMax.duration)-obj.m.l+12));
             d3.select('#text-duration')
                 .transition()
-                .attr('y',obj.chartH - m.b - m.t - obj.yScale(obj.animalMax.age) + 9);
+                .attr('y',obj.chartH - obj.m.b - obj.yScale(obj.animalMax.age) + 9);
         }
 
         // update sidebar -- moved after so paragraph heights could be accurately calculated
@@ -1000,10 +998,10 @@ function howToRead(direction){
                 .attr('transform',`translate(${obj.xScale(obj.animalMax.duration)},${obj.yScale(obj.animalMax.age)})`);
             d3.select('#text-age')
                 .transition()
-                .attr('x',-(obj.xScale(obj.animalMax.duration)-m.l+12));
+                .attr('x',-(obj.xScale(obj.animalMax.duration)-obj.m.l+12));
             d3.select('#text-duration')
                 .transition()
-                .attr('y',chartH - m.b - m.t - obj.yScale(obj.animalMax.age) + 9);
+                .attr('y',obj.chartH - obj.m.b - obj.yScale(obj.animalMax.age) + 9);
             d3.selectAll('.htr-2')
                 .style('opacity',0)
                 .transition()
