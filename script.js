@@ -68,40 +68,40 @@ heightMap.set('5',42);
 // heightMap.set('4',32.5);
 // heightMap.set('5',40.5);
 
-// const traitSpeciesMap = new Map(); // shy versus outgoing
-// traitSpeciesMap.set('1','');
-// traitSpeciesMap.set('2',);
-// traitSpeciesMap.set('3',);
-// traitSpeciesMap.set('4',);
-// traitSpeciesMap.set('5',);
+const traitSpeciesMap = new Map(); // shy versus outgoing
+traitSpeciesMap.set('1','I\'m shy around other');
+traitSpeciesMap.set('2','I\'m somewhat shy around other');
+traitSpeciesMap.set('3','Sometimes I\'m shy, sometimes I\'m not');
+traitSpeciesMap.set('4','I like other');
+traitSpeciesMap.set('5','I love other');
 
-// const traitHumansMap = new Map(); // shy versus outgoing
-// traitHumansMap.set('1','');
-// traitHumansMap.set('2',);
-// traitHumansMap.set('3',);
-// traitHumansMap.set('4',);
-// traitHumansMap.set('5',);
+const traitHumansMap = new Map(); // shy versus outgoing
+traitHumansMap.set('1','I\'m shy around people');
+traitHumansMap.set('2','I\'m somewhat shy around people');
+traitHumansMap.set('3','Sometimes I\'m shy, sometimes I\'m not');
+traitHumansMap.set('4','I like people');
+traitHumansMap.set('5','I love people');
 
-// const traitEnergyMap = new Map(); // lazy versus high energy
-// traitEnergyMap.set('1','');
-// traitEnergyMap.set('2',);
-// traitEnergyMap.set('3',);
-// traitEnergyMap.set('4',);
-// traitEnergyMap.set('5',);
+const traitEnergyMap = new Map(); // lazy versus high energy
+traitEnergyMap.set('1','I\'m a couch potato');
+traitEnergyMap.set('2','I\'m fairly laid back');
+traitEnergyMap.set('3','Sometimes I\'m energetic, sometimes I\'m lazy ');
+traitEnergyMap.set('4','I\'m pretty energetic');
+traitEnergyMap.set('5','I\'m very energetic');
 
-// const traitOpennessMap = new Map(); // careful versus curious
-// traitOpennessMap.set('1','');
-// traitOpennessMap.set('2',);
-// traitOpennessMap.set('3',);
-// traitOpennessMap.set('4',);
-// traitOpennessMap.set('5',);
+const traitOpennessMap = new Map(); // careful versus curious
+traitOpennessMap.set('1','I\'m very cautious; I just need some time');
+traitOpennessMap.set('2','I\'m fairly cautious; I just need some time');
+traitOpennessMap.set('3','Sometimes I\'m cautious, sometimes I\'m curious');
+traitOpennessMap.set('4','I\'m pretty curious');
+traitOpennessMap.set('5','I\'m very curious');
 
-// const traitAffectionMap = new Map(); // lazy versus high energy
-// traitAffectionMap.set('1','');
-// traitAffectionMap.set('2',);
-// traitAffectionMap.set('3',);
-// traitAffectionMap.set('4',);
-// traitAffectionMap.set('5',);
+const traitAffectionMap = new Map(); // detached versus cuddler
+traitAffectionMap.set('1','');
+traitAffectionMap.set('2','');
+traitAffectionMap.set('3','');
+traitAffectionMap.set('4','');
+traitAffectionMap.set('5','');
 
 const monthMap = new Map();
 monthMap.set('0','January');
@@ -500,6 +500,9 @@ function resize() {
         //chart
         obj.m = { l: 40, t: 40, r: 20, b: 80 };
 
+        // sidebar
+        sidebar.style('height',`${window.innerHeight}px`);
+
     }else{
         console.log('not mobile');
         obj.isMobile = 0;
@@ -537,7 +540,7 @@ function resize() {
         .attr('height',obj.chartH);
 
     d3.selectAll('.no-match')
-        .attr('x',obj.chartW/2)
+        .attr('x',((obj.chartW - obj.m.l - obj.m.r)/2) + obj.m.l)
         .attr('y',obj.chartH/2);
 
     // resize axes + labels
@@ -1247,6 +1250,19 @@ function deselect(){
         }else{
             d3.select('#content-success-stories').classed('hidden',false);
             d3.select('#sidebar-header').html('SUCCESS STORIES');
+        }
+    }
+    // if mobile, collapse sidebar
+    if(obj.isMobile == 1){
+        const sidebar = d3.select('#sidebar');
+        const sidebarW = sidebar.node().getBoundingClientRect().width;
+
+        if(obj.sidebarClosed == 0){
+            // close sidebar
+            obj.sidebarClosed = 1;
+            sidebar.transition().style('left',`-${sidebarW-20}px`);
+            d3.select('#sidebar-toggle').transition().style('left','20px');
+            d3.select('#sidebar-toggle').select('i').transition().style('transform','rotate(0deg)');
         }
     }
     

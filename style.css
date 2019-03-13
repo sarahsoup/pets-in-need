@@ -236,7 +236,6 @@ body {
 
 #content-filters {
     overflow-y: scroll;
-    font-weight: 600;
     font-size: 12pt;
 }
 
@@ -633,11 +632,11 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
     }
 
     #sidebar-header {
-        font-size: 30pt;
+        font-size: 26pt;
         margin-bottom: 10px;
     }
 
-    .pin-link {
+    .pin-link, #content-filters, #no-match {
         font-size: 10pt;
     }
 
@@ -645,8 +644,29 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
         margin-top: 0px;
     }
 
-    #content-filters {
-        /* font-weight: 600; */
+    .modal-dialog {
+        margin: 2rem !important;
+    }
+
+    /* .modal-dialog-centered { */
+    #modal {
+        min-height: calc(100% - (2rem * 2));
+    }
+
+    /* .modal-dialog-centered::before { */
+    #modal::before {
+        height: calc(100vh - (2rem * 2));
+    }
+
+    #pin-modal-body {
+        padding: 40px 40px 60px 40px;
+    }
+
+    #pin-modal-body h4 {
+        font-size: 12pt;
+    }
+
+    #pin-modal-body p {
         font-size: 10pt;
     }
 }
