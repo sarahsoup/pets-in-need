@@ -68,6 +68,13 @@ heightMap.set('5',42);
 // heightMap.set('4',32.5);
 // heightMap.set('5',40.5);
 
+const scaleMap = new Map();
+scaleMap.set('1','0%');
+scaleMap.set('2','25%');
+scaleMap.set('3','50%');
+scaleMap.set('4','75%');
+scaleMap.set('5','100%');
+
 const traitSpeciesMap = new Map(); // shy versus outgoing
 traitSpeciesMap.set('1','I\'m shy around other');
 traitSpeciesMap.set('2','I\'m somewhat shy around other');
@@ -97,11 +104,11 @@ traitOpennessMap.set('4','I\'m pretty curious');
 traitOpennessMap.set('5','I\'m very curious');
 
 const traitAffectionMap = new Map(); // detached versus cuddler
-traitAffectionMap.set('1','');
+traitAffectionMap.set('1','I prefer my personal space');
 traitAffectionMap.set('2','');
 traitAffectionMap.set('3','');
 traitAffectionMap.set('4','');
-traitAffectionMap.set('5','');
+traitAffectionMap.set('5','I love to cuddle');
 
 const monthMap = new Map();
 monthMap.set('0','January');
@@ -1115,6 +1122,22 @@ function activateTooltip(data){
     tooltip.classed('hidden',false);
 
     // trait descriptions
+    tooltip.select('#tooltip-extraSpecies').select('.species').html(`${data.species}s`);
+    tooltip.select('#ind-species').style('margin-left',`${scaleMap.get(data.traitExtraSpecies)}`);
+    tooltip.select('#ind-humans').style('margin-left',`${scaleMap.get(data.traitExtraHumans)}`);
+    tooltip.select('#ind-energy').style('margin-left',`${scaleMap.get(data.traitEnergy)}`);
+    tooltip.select('#ind-openness').style('margin-left',`${scaleMap.get(data.traitOpenness)}`);
+    tooltip.select('#ind-affection').style('margin-left',`${scaleMap.get(data.traitAffection)}`);
+
+    // if(data.traitExtraSpecies == '3'){
+    //     tooltip.select('#tooltip-extraSpecies').html(`${traitSpeciesMap.get(data.traitExtraSpecies)}`);
+    // }else{
+    //     tooltip.select('#tooltip-extraSpecies').html(`${traitSpeciesMap.get(data.traitExtraSpecies)} ${data.species}s`);
+    // }
+    // tooltip.select('#tooltip-extraHumans').html(`${traitHumansMap.get(data.traitExtraHumans)}`);
+    // tooltip.select('#tooltip-openness').html(`${traitOpennessMap.get(data.traitOpenness)}`);
+    // tooltip.select('#tooltip-energy').html(`${traitEnergyMap.get(data.traitEnergy)}`);
+    // tooltip.select('#tooltip-affection').html(`${traitAffectionMap.get(data.traitAffection)}`);
 
     // position tooltip
     const tooltipNode = tooltip.node().getBoundingClientRect();

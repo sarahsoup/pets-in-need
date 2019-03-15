@@ -83,12 +83,12 @@
                         </div>
                     </div>
                     <div class="filter-trait">
-                        <p>Extraversion towards same species</p>
+                        <p>Sociability with the same species</p>
                         <div class="slider" id="slider-species"></div>
                         <p class="slider-labels">Shy<span class="right">Outgoing</span></p>
                     </div>
                     <div class="filter-trait">
-                        <p>Extraversion towards people</p>
+                        <p>Sociability with people</p>
                         <div class="slider" id="slider-humans"></div>
                         <p class="slider-labels">Shy<span class="right">Outgoing</span></p>
                     </div>
@@ -214,11 +214,11 @@
                           <image id="htr-icon-extraDog" class="legend-icon htr-icon-extraSpecies" x="0" y="-8" xlink:href="./assets/icons/dog.svg"></image>
                           <line class="legend-line" x1="20" x2="28" y1="8" y2="-8"></line>
                           <image id="htr-icon-extraCat" class="legend-icon htr-icon-extraSpecies" x="32" y="-8" xlink:href="./assets/icons/cat.svg"></image>
-                          <text class="legend-text" x="60" y="0" dy="0.35em">extraversion <tspan x="61" dy="1.2em">towards same species</tspan></text>
+                          <text class="legend-text" x="60" y="0" dy="0.35em">sociability with<tspan x="61" dy="1.2em">the same species</tspan></text>
                         </g>
                         <g class="g-trait" id="g-extraHumans">
                           <image id="htr-icon-extraHumans" class="legend-icon" x="0" y="-12" xlink:href="./assets/icons/person.svg"></image>
-                          <text class="legend-text" x="24" y="0" dy="0.35em">extraversion <tspan x="25" dy="1.2em">towards people</tspan></text>
+                          <text class="legend-text" x="24" y="0" dy="0.35em">sociability <tspan x="25" dy="1.2em">with people</tspan></text>
                         </g>
                         <g class="g-trait" id="g-energy">
                           <image id="htr-icon-energy" class="legend-icon" x="0" y="-10" xlink:href="./assets/icons/energy.svg"></image>
@@ -263,23 +263,45 @@
       <h2 id="tooltip-name"></h2>
       <div class="icon-desc">
         <img id="icon-extraSpecies" class="width-12"> 
-        <p class="tooltip-p" id="tooltip-extaSpecies">trait description</p>
+        <p class="tooltip-p" id="tooltip-extraSpecies">sociability<br>with <span class="species"></span></p>
+        <div class="scale double">
+          <div class="scale-line"></div>
+          <div id="ind-species" class="scale-indicator"></div>
+        </div>
       </div>
       <div class="icon-desc">
         <img id="icon-extraHumans" class="width-8" src="./assets/icons/person.svg"> 
-        <p class="tooltip-p" id="tooltip-extaHumans">trait description</p>
-      </div>
-      <div class="icon-desc">
-        <img id="icon-openness" class="width-12" src="./assets/icons/magnifying_glass.svg"> 
-        <p class="tooltip-p" id="tooltip-openness">trait description</p>
+        <!-- <div> -->
+          <p class="tooltip-p" id="tooltip-extraHumans">sociability<br>with people</p>
+          <div class="scale double">
+            <div class="scale-line"></div>
+            <div id="ind-humans" class="scale-indicator"></div>
+          </div>
+        <!-- </div> -->
       </div>
       <div class="icon-desc">
         <img id="icon-energy" class="width-12" src="./assets/icons/energy.svg"> 
-        <p class="tooltip-p" id="tooltip-energy">trait description</p>
+        <p class="tooltip-p" id="tooltip-energy">energy</p>
+        <div class="scale">
+          <div class="scale-line"></div>
+          <div id="ind-energy" class="scale-indicator"></div>
+        </div>
+      </div>
+      <div class="icon-desc">
+        <img id="icon-openness" class="width-12" src="./assets/icons/magnifying_glass.svg"> 
+        <p class="tooltip-p" id="tooltip-openness">openness</p>
+        <div class="scale">
+          <div class="scale-line"></div>
+          <div id="ind-openness" class="scale-indicator"></div>
+        </div>
       </div>
       <div class="icon-desc">
         <img id="icon-affection" class="width-12" src="./assets/icons/heart.svg"> 
-        <p class="tooltip-p" id="tooltip-affection">trait description</p>
+        <p class="tooltip-p" id="tooltip-affection">affection</p>
+        <div class="scale">
+          <div class="scale-line"></div>
+          <div id="ind-affection" class="scale-indicator"></div>
+        </div>
       </div>
       <div class="spacer"></div>
       <div class="demo-desc" id="demo-desc-species">
@@ -290,7 +312,7 @@
       </div>
       <div class="demo-desc" id="demo-desc-gender">
         <svg class="tooltip-svg">
-          <line class="tooltip-line" x1="2" x2="14" y1="14" y2="2"></line>
+          <line class="tooltip-line" x1="3" x2="13" y1="13" y2="3"></line>
         </svg>
         <p class="tooltip-p" id="tooltip-gender"></p>
       </div>
@@ -310,8 +332,8 @@
               <stop offset="100%" style="stop-color:#E8928C;stop-opacity:1" />
             </linearGradient>
           </defs>
-          <rect fill="url(#gradient)" x="0" y="7" width="20" height="6"></rect>
-          <line class="tooltip-line" x1="10" x2="10" y1="5" y2="15"></line>
+          <rect fill="url(#gradient)" x="0" y="6" width="20" height="6"></rect>
+          <line class="tooltip-line" x1="10" x2="10" y1="3" y2="15"></line>
         </svg>
         <p class="tooltip-p" id="tooltip-color"></p>
       </div>
