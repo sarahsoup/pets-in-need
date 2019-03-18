@@ -1221,12 +1221,11 @@ function setUpLegend(){
 
 function activateTooltip(data){
     const tooltip = d3.select('#tooltip');
-    // display tooltip for desktop, not mobile
-
-    if(obj.isMobile == 0){
-        tooltip.classed('hidden',false);
-    }else {
-        tooltip.classed('hidden',true);
+    tooltip.classed('hidden',false);
+    // display partial tooltip for mobile
+    if(obj.isMobile == 1){
+        tooltip.select('.spacer').classed('hidden',true);
+        tooltip.selectAll('.demo-desc').classed('hidden',true);
     }
 
     // trait descriptions
