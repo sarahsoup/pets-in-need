@@ -1,11 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <title>Pets in Need: Worthy & Waiting</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Pets In Need</title>
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Pets in Need: Worthy & Waiting">
+    <meta property="og:description" content="Take a look at our long-stay animals in a new way.">
+    <meta property="og:image" content="https://sarahsoup.github.io/pets-in-need/assets/social_adopted.png">
+    <meta property="og:url" content="https://sarahsoup.github.io/pets-in-need/">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+
     <link href="style.css" rel="stylesheet"/>
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
@@ -37,9 +47,13 @@
     </div>
     <div id="splash" class="container-fluid">
       <div class="row justify-content-center">
-        <div class="col-10 col-md-8">
+        <div class="col-10">
           <div id="content-container">
               <h1 class="acumin-cond">WORTHY<br><span id="ampersand">&</span><br>WAITING</h1>
+              <div id="splash-line-container">
+                  <div class="splash-line left"></div>
+                  <div class="splash-line right"></div>
+              </div>
               <p>Take a look at our long-stay <br>animals in a new way.</p>
               <div class="btn-container">
                   <button type="button" id="btn-adopt" class="btn pin-btn acumin">ADOPTABLES</button>
@@ -110,7 +124,7 @@
                     <a class="pin-link acumin" id="filter-clear">clear filters</a>
                   </div>
                   <div id="content-success-stories" class="hidden">
-                    <p>content coming soon</p>
+                    <p>Every shelter animal is worthy of a forever home. Some of our animals, however, end up waiting far longer than others, for reasons often beyond their control. Here we highlight dogs and cats that found their forever homes after long stays at Pets in Need.</p>
                   </div>
                   <div id="content-animal-selected" class="hidden">
                     <img>
@@ -125,20 +139,20 @@
                   <div id="content-how-to-read" class="hidden">
                     <p class="step" id="step-1">
                       Each animal is represented by a sunburst. Its position is based on its <span class="bold">age in years</span>, and <span class="bold">months in the shelter</span>.
-                      <br><br>For instance, <span class="span-name"></span> is <span id="span-age"></span> years old and has spent <span id="span-duration"></span> months in the shelter.
+                      <br><br>For instance, <span class="span-name"></span> is <span class="span-age"></span> years old and has spent <span class="span-duration"></span> months in the shelter.
                     </p>
                     <p class="step" id="step-2">
-                      The background represents the animal’s <span class="bold">size</span> and <span class="bold">fur color</span>. <span class="span-name"></span> is <span id="span-size"></span>-sized with a <span id="span-color"></span>-colored coat.
-                      <br><br>The center circle indicates the <span class="bold">species</span>. <span class="span-name"></span> is a <span id="span-species"></span>.
-                      <br><br>The radiating lines indicate <span class="bold">gender</span>. <span class="span-name"></span> is <span id="span-gender"></span>.
+                      The background represents the animal’s <span class="bold">size</span> and <span class="bold">fur color</span>. <span class="span-name"></span> is <span class="span-size"></span>-sized with a <span class="span-color"></span>-colored coat.
+                      <br><br>The center circle indicates the <span class="bold">species</span>. <span class="span-name"></span> is a <span class="span-species"></span>.
+                      <br><br>The radiating lines indicate <span class="bold">gender</span>. <span class="span-name"></span> is <span class="span-gender"></span>.
                     </p>
                     <p class="step" id="step-3">
                       The personality traits are represented by stronger rays radiating from the center.
                       <br><br>Each ray represents a different personality trait.
                       <br><br>Each trait is rated on a level of 1-5. The higher the rating, the longer the ray.
                     </p>
-                    <a class="pin-link" id="link-prev">&nbsp;← prev</a>
-                    <a class="pin-link" id="link-next">next →&nbsp;</a>
+                    <a class="pin-link link-prev" id="link-prev">&nbsp;← prev</a>
+                    <a class="pin-link link-next" id="link-next">next →&nbsp;</a>
                   </div>
                 </div>
             </div>
@@ -271,13 +285,11 @@
       </div>
       <div class="icon-desc">
         <img id="icon-extraHumans" class="width-8" src="./assets/icons/person.svg"> 
-        <!-- <div> -->
-          <p class="tooltip-p" id="tooltip-extraHumans">sociability<br>with people</p>
-          <div class="scale double">
-            <div class="scale-line"></div>
-            <div id="ind-humans" class="scale-indicator"></div>
-          </div>
-        <!-- </div> -->
+        <p class="tooltip-p" id="tooltip-extraHumans">sociability<br>with people</p>
+        <div class="scale double">
+          <div class="scale-line"></div>
+          <div id="ind-humans" class="scale-indicator"></div>
+        </div>
       </div>
       <div class="icon-desc">
         <img id="icon-energy" class="width-12" src="./assets/icons/energy.svg"> 
@@ -338,8 +350,29 @@
         <p class="tooltip-p" id="tooltip-color"></p>
       </div>
     </div>
+    <div id="htr-mobile" class="hidden">
+      <p class="m-step" id="m-step-1">
+        Each animal is represented by a sunburst. Its position is based on its <span class="bold">age in years</span>, and <span class="bold">months in the shelter</span>.
+        <br><br>For instance, <span class="span-name"></span> is <span class="span-age"></span> years old and has spent <span class="span-duration"></span> months in the shelter.
+      </p>
+      <p class="m-step hidden" id="m-step-2">
+        The background represents the animal’s <span class="bold">size</span> and <span class="bold">fur color</span>. <span class="span-name"></span> is <span class="span-size"></span>-sized with a <span class="span-color"></span>-colored coat.
+        <br><br>The center circle indicates the <span class="bold">species</span>. <span class="span-name"></span> is a <span class="span-species"></span>.
+        <br><br>The radiating lines indicate <span class="bold">gender</span>. <span class="span-name"></span> is <span class="span-gender"></span>.
+      </p>
+      <p class="m-step hidden" id="m-step-3">
+        The personality traits are represented by stronger rays radiating from the center.
+        <br><br>Each ray represents a different personality trait.
+        <br><br>Each trait is rated on a level of 1-5. The higher the rating, the longer the ray.
+      </p>
+      <a class="pin-link link-prev" id="m-link-prev">&nbsp;← prev</a>
+      <a class="pin-link link-next" id="m-link-next">next →&nbsp;</a>
+    </div>
     <div id="sidebar-toggle" class="hidden">
         <i class="material-icons md-24 color444444">keyboard_arrow_right</i>
+    </div>
+    <div id="sidebar-tooltip" class="hidden">
+      <p>open the sidebar for a<br>photo and description</p>
     </div>
   </body>
   <script src="https://d3js.org/d3.v5.min.js"></script>

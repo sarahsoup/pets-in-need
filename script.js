@@ -44,9 +44,9 @@ const weightsMax = {
 };
 
 const weightMap = new Map();
-weightMap.set('small',25+6);
-weightMap.set('medium',37.5+6);
-weightMap.set('large',50+6);
+weightMap.set('small',20 + 2); // was 25 + 6
+weightMap.set('medium',35 + 2); // was 37.5 + 6
+weightMap.set('large',50 + 2);
 
 const rayUnits = 8;
 
@@ -59,15 +59,7 @@ heightMap.set('3',26);
 heightMap.set('4',34);
 heightMap.set('5',42);
 
-// map for unslices rays
-// const ray = { w: 6.5, offset: 1};
-// const heightMap = new Map();
-// heightMap.set('1',8.5);
-// heightMap.set('2',16.5);
-// heightMap.set('3',24.5);
-// heightMap.set('4',32.5);
-// heightMap.set('5',40.5);
-
+// map for tooltip traits scale
 const scaleMap = new Map();
 scaleMap.set('1','0%');
 scaleMap.set('2','25%');
@@ -75,41 +67,7 @@ scaleMap.set('3','50%');
 scaleMap.set('4','75%');
 scaleMap.set('5','100%');
 
-const traitSpeciesMap = new Map(); // shy versus outgoing
-traitSpeciesMap.set('1','I\'m shy around other');
-traitSpeciesMap.set('2','I\'m somewhat shy around other');
-traitSpeciesMap.set('3','Sometimes I\'m shy, sometimes I\'m not');
-traitSpeciesMap.set('4','I like other');
-traitSpeciesMap.set('5','I love other');
-
-const traitHumansMap = new Map(); // shy versus outgoing
-traitHumansMap.set('1','I\'m shy around people');
-traitHumansMap.set('2','I\'m somewhat shy around people');
-traitHumansMap.set('3','Sometimes I\'m shy, sometimes I\'m not');
-traitHumansMap.set('4','I like people');
-traitHumansMap.set('5','I love people');
-
-const traitEnergyMap = new Map(); // lazy versus high energy
-traitEnergyMap.set('1','I\'m a couch potato');
-traitEnergyMap.set('2','I\'m fairly laid back');
-traitEnergyMap.set('3','Sometimes I\'m energetic, sometimes I\'m lazy ');
-traitEnergyMap.set('4','I\'m pretty energetic');
-traitEnergyMap.set('5','I\'m very energetic');
-
-const traitOpennessMap = new Map(); // careful versus curious
-traitOpennessMap.set('1','I\'m very cautious; I just need some time');
-traitOpennessMap.set('2','I\'m fairly cautious; I just need some time');
-traitOpennessMap.set('3','Sometimes I\'m cautious, sometimes I\'m curious');
-traitOpennessMap.set('4','I\'m pretty curious');
-traitOpennessMap.set('5','I\'m very curious');
-
-const traitAffectionMap = new Map(); // detached versus cuddler
-traitAffectionMap.set('1','I prefer my personal space');
-traitAffectionMap.set('2','');
-traitAffectionMap.set('3','');
-traitAffectionMap.set('4','');
-traitAffectionMap.set('5','I love to cuddle');
-
+// map for info modal: last date editted
 const monthMap = new Map();
 monthMap.set('0','January');
 monthMap.set('1','February');
@@ -124,11 +82,13 @@ monthMap.set('9','October');
 monthMap.set('10','November');
 monthMap.set('11','December');
 
+// other variables
 obj.dataFilter = 'available';
 obj.howToReadOpen = false;
 obj.howToReadStep = 0;
 obj.isMobile = 0;
 obj.sidebarClosed = 1;
+obj.firstPortrait = 1;
 
 // create sliders
 const sliderSpecies = document.getElementById('slider-species');
@@ -226,8 +186,6 @@ d3.csv('./assets/data/pin_data.csv',function(row){
         row.age = (row.adopted == 1) ? getYears(row.dob,row.adoption) : getYears(row.dob,todayDate);
     });
 
-    console.log(data);
-
     // data subsets
     const dataAvailable = data.filter(d => d.adopted == 0);
     const dataAdopted = data.filter(d => d.adopted == 1);
@@ -247,7 +205,7 @@ d3.csv('./assets/data/pin_data.csv',function(row){
         .attr('dy','3.65em')
         .text('months in shelter');
 
-    // age duration
+    // age scale
     obj.ageMaxAvailable = d3.max(dataAvailable.map(d => d.age));
     obj.ageMaxAdopted = d3.max(dataAdopted.map(d => d.age));
     obj.ageMax = (obj.dataFilter == 'available') ? obj.ageMaxAvailable : obj.ageMaxAdopted;
@@ -259,16 +217,6 @@ d3.csv('./assets/data/pin_data.csv',function(row){
         .attr('dy','1em')
         .attr('transform', 'rotate(-90)')
         .text('age (years)');
-
-    // add force
-    // const simulation = d3.forceSimulation(data)
-    //     .force('x', d3.forceX(d => obj.xScale(d.duration)) /*.strength(1)*/)
-    //     .force('y', d3.forceY(d => obj.yScale(d.age)))
-    //     .force('collide', d3.forceCollide().radius(10))
-    //     .force('manyBody', d3.forceManyBody().strength(-10))
-    //     .stop();
-
-    // for (var i = 0; i < 150; ++i) simulation.tick();
 
 
     ////////// DATA PORTRAITS //////////
@@ -289,17 +237,6 @@ d3.csv('./assets/data/pin_data.csv',function(row){
     resize();
 
     // set up some additional elements on page load
-    d3.selectAll('.size-background-circle')
-        .attr('r',function(){
-            let radius;
-            thisId = d3.select(this).attr('id');
-            if(thisId == 'background-circle-small'){ radius = weightMap.get('small');
-            }else if(thisId == 'background-circle-medium'){ radius = weightMap.get('medium');
-            }else if(thisId == 'background-circle-large'){ radius = weightMap.get('large');
-            }else{ radius = ((+(thisId[thisId.length -1]) * rayUnits) + 10) * 2 };
-            return radius;
-        });
-
     d3.select('#tooltip-icons').selectAll('.icon-container')
         .each(function(d,i){
             const width12 = d3.select(this).classed('width-12');
@@ -331,12 +268,12 @@ d3.csv('./assets/data/pin_data.csv',function(row){
 
     ////////// INTERACTIONS //////////
 
+    enablePortraitInteractions();
+    
     svg.select('#background')
         .on('click',function(){
             deselect();
         });
-
-    enablePortraitInteractions();
 
     d3.select('#filter-toggle')
         .on('click',function(){
@@ -372,7 +309,22 @@ d3.csv('./assets/data/pin_data.csv',function(row){
                 d3.select('#y-scale').call(d3.axisLeft(obj.yScale).ticks(Math.ceil(obj.ageMaxAvailable)).tickFormat(d3.format('d')));
 
                 d3.selectAll('.portrait')
-                    .classed('hidden',d => d.adopted == 1)
+                    .classed('hidden',function(d){
+                        let hidden = true;
+                        const adopted = (d.adopted == 1) ? true : false;
+                        const hiddenSpecies = d3.select(this).classed('hidden-bySpecies');
+                        const hiddenTraitSpecies = d3.select(this).classed('hidden-bytraitSpecies');
+                        const hiddenTraitHumans = d3.select(this).classed('hidden-bytraitHumans');
+                        const hiddenTraitEnergy = d3.select(this).classed('hidden-bytraitEnergy');
+                        const hiddenTraitOpenness = d3.select(this).classed('hidden-bytraitOpenness');
+                        const hiddenTraitAffection = d3.select(this).classed('hidden-bytraitAffection');
+                        if(adopted || hiddenSpecies || hiddenTraitSpecies || hiddenTraitHumans || hiddenTraitEnergy || hiddenTraitOpenness || hiddenTraitAffection){
+
+                        }else{
+                            hidden = false;
+                        }
+                        return hidden;
+                    })
                     .attr('transform',d => `translate(${obj.xScale(d.duration)},${obj.yScale(d.age)})`);
 
             }else{
@@ -445,7 +397,7 @@ d3.csv('./assets/data/pin_data.csv',function(row){
             }
         })
 
-    d3.select('#link-prev')
+    d3.selectAll('.link-prev')
         .on('click',function(){
             if([2,3].includes(obj.howToReadStep)){
                 obj.howToReadStep--;
@@ -453,7 +405,7 @@ d3.csv('./assets/data/pin_data.csv',function(row){
             }
         })
 
-    d3.select('#link-next')
+    d3.selectAll('.link-next')
         .on('click',function(){
             if([1,2].includes(obj.howToReadStep)){
                 obj.howToReadStep++;
@@ -467,7 +419,21 @@ d3.csv('./assets/data/pin_data.csv',function(row){
 
 window.addEventListener('resize', resize);
 
+
+////////// FUNCTIONS //////////
+
 function resize() {
+
+    deselect();
+
+    // position lines on splash page
+    const header = d3.select('#splash').select('.acumin-cond').node().getBoundingClientRect();
+    const col = d3.select('#splash').select('.col-10').node().getBoundingClientRect();
+    const lineW = d3.select('#splash-line-container').node().getBoundingClientRect().width;
+    d3.select('#splash-line-container')
+        .style('position','absolute')
+        .style('top',((header.height*0.55))+'px')
+        .style('left',((col.width/2)-(lineW/2)-15)+'px');
 
     // check if mobile
     if(window.innerWidth < 576){
@@ -495,6 +461,9 @@ function resize() {
                     sidebar.transition().style('left',`0px`);
                     d3.select('#sidebar-toggle').transition().style('left',`${sidebarW}px`);
                     d3.select('#sidebar-toggle').select('i').transition().style('transform','rotate(180deg)');
+                    d3.select('#sidebar-toggle').select('i').classed('animate',false);
+                    d3.select('#sidebar-tooltip').classed('hidden',true);
+                    d3.select('#tooltip-arrow').classed('hidden',true);
                 }else{
                     // close sidebar
                     obj.sidebarClosed = 1;
@@ -531,6 +500,10 @@ function resize() {
     const filtersY = d3.select('#content-filters').node().getBoundingClientRect().y;
     const filtersH = Math.max(window.innerHeight - filtersY - 60, 20);
     d3.select('#content-filters')
+        .style('height',`${filtersH}px`);
+    d3.select('#content-success-stories')
+        .style('height',`${filtersH}px`);
+    d3.select('#content-how-to-read')
         .style('height',`${filtersH}px`);
 
     // resize svg
@@ -630,7 +603,7 @@ function createPortrait(data){
         .attr('cy',0)
         .attr('r',5);
 
-    // outer circle
+    // outer circle - currently not displayed since it doesn't encode any data
     element.append('circle')
         .attr('class','outer-circle')
         .attr('cx',0)
@@ -886,27 +859,36 @@ function howToRead(direction){
         d3.selectAll('.htr-2').classed('hidden',true);
         d3.selectAll('.htr-3').classed('hidden',true);
 
+        // unhide content for mobile
+        d3.selectAll('.m-step')
+            .classed('hidden', function(){
+                const thisId = d3.select(this).attr('id');
+                return (thisId == `m-step-${obj.howToReadStep}`) ? false : true;
+            });
+
         if(direction == 'forward'){
             // sidebar
             d3.select('#content-filters')
                 .classed('hidden',true);
+            d3.select('#content-success-stories')
+                .classed('hidden',true);
             d3.select('#content-how-to-read')
                 .classed('hidden',false);
-            d3.select('#link-next')
+            d3.selectAll('.link-next')
                 .html('next →&nbsp;');
             d3.selectAll('.span-name')
                 .html(`${obj.animalMax.name}`);
-            d3.select('#span-age')
+            d3.selectAll('.span-age')
                 .html(`${obj.animalMax.age.toFixed(1)}`);
-            d3.select('#span-duration')
+            d3.selectAll('.span-duration')
                 .html(`${obj.animalMax.duration.toFixed(0)}`);
-            d3.select('#span-size')
+            d3.selectAll('.span-size')
                 .html(`${obj.animalMax.weightCat}`);
-            d3.select('#span-color')
+            d3.selectAll('.span-color')
                 .html(`${obj.animalMax.colorCat}`);
-            d3.select('#span-species')
+            d3.selectAll('.span-species')
                 .html(`${obj.animalMax.species.toLowerCase()}`);
-            d3.select('#span-gender')
+            d3.selectAll('.span-gender')
                 .html(`${obj.animalMax.gender.toLowerCase()}`);
 
             // calculate paragraph heights
@@ -938,6 +920,26 @@ function howToRead(direction){
                 .attr('y',obj.chartH - obj.m.b - obj.yScale(obj.animalMax.age) + 9)
                 .attr('dy','0.71em') // manual adjustment
                 .text(obj.animalMax.duration.toFixed(0));
+
+            // if mobile
+            if(obj.isMobile == 1){
+                d3.select('#htr-mobile').classed('hidden',false);
+                // set width
+                const width = obj.chartW - obj.m.l - obj.m.r - 20;
+                d3.select('#htr-mobile').style('width',`${width}px`);
+                // get height
+                const height = d3.select('#htr-mobile').node().getBoundingClientRect().height;
+                // position around portrait
+                const portraitCY = d3.select(`#portrait-${obj.animalMax.id}`).select('.species').node().getBoundingClientRect().y + 5;
+                const svgNode = d3.select('#chart').node().getBoundingClientRect();
+                const svgCY = svgNode.y + (svgNode.height/2);
+                const yBottom = Math.max(portraitCY + 50,svgNode.y+svgNode.height-obj.m.b-height-10);
+                const yTop = portraitCY - 50 - height;
+                obj.mHTRy1 = (portraitCY < svgCY) ? yBottom : yTop;
+                d3.select('#htr-mobile')
+                    .style('top',`${obj.mHTRy1}px`)
+                    .style('left',`${svgNode.x + obj.m.l + 10}px`);
+            }
         }else{
             // transform scales and portraits
             let durationMax = (obj.dataFilter == 'available') ? obj.durationMaxAvailable : obj.durationMaxAdopted;
@@ -962,6 +964,12 @@ function howToRead(direction){
             d3.select('#text-duration')
                 .transition()
                 .attr('y',obj.chartH - obj.m.b - obj.yScale(obj.animalMax.age) + 9);
+
+            if(obj.isMobile == 1){
+                d3.select('#htr-mobile')
+                    .transition()
+                    .style('top',`${obj.mHTRy1}px`);
+            }
         }
 
         // update sidebar -- moved after so paragraph heights could be accurately calculated
@@ -970,7 +978,7 @@ function howToRead(direction){
                 const thisId = d3.select(this).attr('id');
                 return (thisId == `step-${obj.howToReadStep}`) ? false : true;
             });
-        d3.select('#link-prev')
+        d3.selectAll('.link-prev')
             .classed('link-disabled',true);
         
     }else if(obj.howToReadStep == 2){
@@ -984,22 +992,27 @@ function howToRead(direction){
                 const thisId = d3.select(this).attr('id');
                 return (thisId == `step-${obj.howToReadStep}`) ? false : true;
             });
-        d3.select('#link-prev')
+        d3.selectAll('.m-step')
+            .classed('hidden', function(){
+                const thisId = d3.select(this).attr('id');
+                return (thisId == `m-step-${obj.howToReadStep}`) ? false : true;
+            });
+        d3.selectAll('.link-prev')
             .classed('link-disabled',false);
 
         if(direction == 'forward'){
             // transform axis and portraits
             obj.xScale.domain([obj.animalMax.duration-2,obj.animalMax.duration+2]);
-            obj.yScale.domain([obj.animalMax.age-1,obj.animalMax.age+1]);
+            obj.yScale.domain((obj.isMobile == 0) ? [obj.animalMax.age-1,obj.animalMax.age+1] : [obj.animalMax.age-2,obj.animalMax.age+1]);
             d3.select('#x-scale')
                 .transition()
-                .call(d3.axisBottom(obj.xScale).ticks(4).tickFormat(d3.format('d')));
+                .call((obj.isMobile == 0) ? d3.axisBottom(obj.xScale).ticks(4).tickFormat(d3.format('d')) : d3.axisBottom(obj.xScale).ticks(2).tickFormat(d3.format('d')));
             d3.select('#y-scale')
                 .transition()
-                .call(d3.axisLeft(obj.yScale).ticks(2).tickFormat(d3.format('d')));
+                .call((obj.isMobile == 0) ? d3.axisLeft(obj.yScale).ticks(2).tickFormat(d3.format('d')) : d3.axisLeft(obj.yScale).ticks(4).tickFormat(d3.format('d')));
             d3.selectAll(`.${obj.dataFilter}`)
                 .transition()
-                .attr('transform',d => (d.id == obj.animalMax.id) ? `translate(${obj.xScale(d.duration)},${obj.yScale(d.age)}) scale(2)`
+                .attr('transform',d => (d.id == obj.animalMax.id) ? (obj.isMobile == 0) ? `translate(${obj.xScale(d.duration)},${obj.yScale(d.age)}) scale(2)` : `translate(${obj.xScale(d.duration)},${obj.yScale(d.age)}) scale(1.5)`
                 : `translate(${obj.xScale(d.duration)},${obj.yScale(d.age)})`);
 
             // legend
@@ -1017,8 +1030,18 @@ function howToRead(direction){
                 .transition()
                 .delay(250)
                 .style('opacity',1);
+            
+            // if mobile
+            if(obj.isMobile == 1){
+                const height = d3.select('#htr-mobile').node().getBoundingClientRect().height;
+                const svgNode = d3.select('#chart').node().getBoundingClientRect();
+                obj.mHTRy2 = svgNode.y+svgNode.height-obj.m.b-height-10;
+                d3.select('#htr-mobile')
+                    .transition()
+                    .style('top',`${obj.mHTRy2}px`);
+            }
         }else{
-            d3.select('#link-next').html('next →&nbsp;');
+            d3.selectAll('.link-next').html('next →&nbsp;');
         }
     }else if(obj.howToReadStep == 3){
         d3.selectAll('.htr-2').classed('hidden',true);
@@ -1029,12 +1052,23 @@ function howToRead(direction){
                 const thisId = d3.select(this).attr('id');
                 return (thisId == `step-${obj.howToReadStep}`) ? false : true;
             });
-        d3.select('#link-next').html('done');
+
+        d3.selectAll('.m-step')
+            .classed('hidden', function(){
+                const thisId = d3.select(this).attr('id');
+                return (thisId == `m-step-${obj.howToReadStep}`) ? false : true;
+            });
+
+        d3.selectAll('.link-next').html('done');
+
+        if(obj.isMobile == 1){
+        }
         
 
     }else if(obj.howToReadStep == 0){
         d3.select('#btn-read').classed('pin-btn-active',false);
         d3.select('#g-legend').classed('hidden',true);
+        d3.select('#htr-mobile').classed('hidden',true);
 
         // update sidebar
         if(obj.dataFilter == 'available'){
@@ -1066,13 +1100,74 @@ function setUpLegend(){
     d3.select('#g-legend')
         .attr('transform',`translate(${obj.xScale(obj.animalMax.duration)},${obj.yScale(obj.animalMax.age)})`);
     d3.select('#g-size-legend')
-        .attr('transform','translate(-200,-30)');
+        .attr('transform',(obj.isMobile == 0) ? 'translate(-200,-30)' : 'translate(-100,-100)');
     d3.select('#g-color')
-        .attr('transform','translate(-200,10)');
+        .attr('transform',(obj.isMobile == 0) ? 'translate(-200,10)' : 'translate(5,-128)');
     d3.select('#g-species')
-        .attr('transform','translate(120,-30)');
+        .attr('transform',(obj.isMobile == 0) ? 'translate(120,-30)' : 'translate(-75,102)');
     d3.select('#g-gender')
-        .attr('transform','translate(120,20)');
+        .attr('transform',(obj.isMobile == 0) ? 'translate(120,20)' : 'translate(5,80)');
+
+    if(obj.isMobile == 0){
+        d3.selectAll('.size-background-circle')
+            .attr('r',function(){
+                let radius;
+                thisId = d3.select(this).attr('id');
+                if(thisId == 'background-circle-small'){ radius = weightMap.get('small');
+                }else if(thisId == 'background-circle-medium'){ radius = weightMap.get('medium');
+                }else if(thisId == 'background-circle-large'){ radius = weightMap.get('large');
+                }else{ radius = ((+(thisId[thisId.length -1]) * rayUnits) + 10) * 2 };
+                return radius;
+            });
+
+        d3.selectAll('.g-trait')
+            .each(function(d,i){
+                const degrees = ((72*i)+15);
+                const radians = ((degrees * Math.PI) / 180) - (Math.PI/2);
+                const radius = (obj.isMobile == 0) ? ((5 * rayUnits) + 10) * 2 : ((5 * rayUnits) + 10) * 1.5;
+                const x = (radius + 10) * Math.cos(radians);
+                const y = (radius + 10) * Math.sin(radians);
+                d3.select(this).attr('transform',`translate(${x},${y})`);
+            })
+    }else{
+        d3.selectAll('.size-background-circle')
+            .attr('r',function(){
+                let radius;
+                thisId = d3.select(this).attr('id');
+                if(thisId == 'background-circle-small'){ radius = weightMap.get('small') * 0.75;
+                }else if(thisId == 'background-circle-medium'){ radius = weightMap.get('medium') * 0.75;
+                }else if(thisId == 'background-circle-large'){ radius = weightMap.get('large') * 0.75;
+                }else{ radius = ((+(thisId[thisId.length -1]) * rayUnits) + 10) * 1.5 };
+                return radius;
+            });
+
+        d3.selectAll('.g-trait').selectAll('.legend-text')
+            .attr('x',0)
+            .attr('y',20);
+
+        d3.select('#g-extraSpecies').select('tspan')
+            .attr('x',0);
+
+        d3.select('#g-extraHumans').select('tspan')
+            .attr('x',0)
+            .html('with');
+        d3.select('#g-extraHumans').select('.legend-text')
+            .append('tspan')
+            .attr('x',0)
+            .attr('dy','1.2em')
+            .html('people');
+
+        d3.selectAll('.g-trait')
+            .each(function(d,i){
+                const extraSpace = (d3.select(this).attr('id') == 'g-extraSpecies') ? 45 : (d3.select(this).attr('id') == 'g-affection') ? 15 : 10;
+                const degrees = ((72*i)+15);
+                const radians = ((degrees * Math.PI) / 180) - (Math.PI/2);
+                const radius = (obj.isMobile == 0) ? ((5 * rayUnits) + 10) * 2 : ((5 * rayUnits) + 10) * 1.5;
+                const x = (radius + extraSpace) * Math.cos(radians);
+                const y = (radius + extraSpace) * Math.sin(radians);
+                d3.select(this).attr('transform',`translate(${x},${y})`);
+            })
+    }
 
     d3.selectAll('.size-legend-circle')
         .classed('size-legend-circle-active',function(){
@@ -1104,16 +1199,6 @@ function setUpLegend(){
             const id = d3.select(this).html();
             return (obj.animalMax.gender.toLowerCase() == id) ? true : false;
         });
-
-    d3.selectAll('.g-trait')
-        .each(function(d,i){
-            const degrees = ((72*i)+15);
-            const radians = ((degrees * Math.PI) / 180) - (Math.PI/2);
-            const radius = ((5 * rayUnits) + 10) * 2
-            const x = (radius + 10) * Math.cos(radians);
-            const y = (radius + 10) * Math.sin(radians);
-            d3.select(this).attr('transform',`translate(${x},${y})`);
-        })
 }
 
 function activateTooltip(data){
@@ -1146,19 +1231,31 @@ function activateTooltip(data){
     const svgNode = d3.select('#chart').node().getBoundingClientRect();
     const svgCX = svgNode.x + (svgNode.width/2);
     const svgCY = svgNode.y + (svgNode.height/2);
-    const tooltipDelta = window.innerHeight - (portraitCY-35+tooltipNode.height);
     const radius = ((5 * rayUnits) + 10);
     const iconOffset = 16;
 
-    tooltip
-        .style('left', (portraitCX < svgCX) ? (portraitCX + radius + iconOffset + 20) +'px' : (portraitCX - radius - tooltipNode.width - (iconOffset/2) - 20) +'px')
-        .style('top', (tooltipDelta > 0) ? (portraitCY-35)+'px' : (portraitCY-35+tooltipDelta-20)+'px');
+    if(obj.isMobile == 1){
+        tooltip
+            .style('left', svgCX-(tooltipNode.width/2) +'px')
+            .style('top', (portraitCY < svgCY) ? (portraitCY+80)+'px' : (portraitCY-80-tooltipNode.height)+'px');
 
-    d3.select('#tooltip-arrow')
-        .classed('arrow-right', (portraitCX < svgCX) ? false : true)
-        .classed('arrow-left', (portraitCX < svgCX) ? true : false)
-        .style('top', (portraitCY-10)+'px')
-        .style('left', (portraitCX < svgCX) ? (portraitCX + radius + iconOffset + 10) +'px' : (portraitCX - radius - (iconOffset/2) - 20) +'px')
+        // draw attention to sidebar to click
+        d3.select('#sidebar-toggle').select('i')
+            .classed('animate',true);
+
+    }else{
+        const tooltipDelta = window.innerHeight - (portraitCY-35+tooltipNode.height);
+
+        tooltip
+            .style('left', (portraitCX < svgCX) ? (portraitCX + radius + iconOffset + 20) +'px' : (portraitCX - radius - tooltipNode.width - (iconOffset/2) - 20) +'px')
+            .style('top', (tooltipDelta > 0) ? (portraitCY-35)+'px' : (portraitCY-35+tooltipDelta-20)+'px');
+
+        d3.select('#tooltip-arrow')
+            .classed('arrow-right', (portraitCX < svgCX) ? false : true)
+            .classed('arrow-left', (portraitCX < svgCX) ? true : false)
+            .style('top', (portraitCY-10)+'px')
+            .style('left', (portraitCX < svgCX) ? (portraitCX + radius + iconOffset + 10) +'px' : (portraitCX - radius - (iconOffset/2) - 20) +'px')
+    }
 
     d3.select('#tooltip-icons')
         .classed('hidden',false)
@@ -1204,13 +1301,23 @@ function enablePortraitInteractions(){
     svg.selectAll('.portrait')
         .style('cursor','pointer')
         .on('mouseenter',function(d){
-            activateTooltip(d);
-            svg.selectAll('.portrait')
-                .transition()
-                .style('opacity', function(){
-                    const id = d3.select(this).attr('id');
-                    return (id == `portrait-${d.id}`) ? 1 : dimmed;
-                })
+            const thisOpacity = d3.select(this).style('opacity');
+            if(d3.select('#content-animal-selected').classed('hidden') || thisOpacity == 1){
+                activateTooltip(d);
+                svg.selectAll('.portrait')
+                    .sort(function(a,b){
+                        if (a.id != d.id){
+                            return -1;
+                        }else{
+                            return 1;
+                        }
+                    })
+                    .transition()
+                    .style('opacity', function(){
+                        const id = d3.select(this).attr('id');
+                        return (id == `portrait-${d.id}`) ? 1 : dimmed;
+                    })
+            }
         })
         .on('mouseleave',function(d){
             d3.select('#tooltip').classed('hidden',true);
@@ -1219,7 +1326,6 @@ function enablePortraitInteractions(){
                 .classed('arrow-left', false);
             d3.select('#tooltip-icons')
                 .classed('hidden',true);
-
             if(d3.select('#content-animal-selected').classed('hidden')){
                 svg.selectAll('.portrait')
                     .transition()
@@ -1227,7 +1333,41 @@ function enablePortraitInteractions(){
             }
         })
         .on('click',function(d){
-            // console.log(d);
+            
+            if(obj.isMobile == 1){
+                // also bring in tooltip
+                activateTooltip(d);
+                svg.selectAll('.portrait')
+                    .sort(function(a,b){
+                        if (a.id != d.id){
+                            return -1;
+                        }else{
+                            return 1;
+                        }
+                    })
+                    .transition()
+                    .style('opacity', function(){
+                        const id = d3.select(this).attr('id');
+                        return (id == `portrait-${d.id}`) ? 1 : dimmed;
+                    })
+                if(obj.firstPortrait == 1){
+                    obj.firstPortrait = 0;
+                    d3.select('#sidebar-tooltip').classed('hidden',false);
+                    d3.select('#tooltip-arrow')
+                        .classed('hidden',false)
+                        .classed('arrow-left',true)
+                        .style('border-right','10px solid #444444')
+                        .style('top','38.5px') // center of toggle
+                        .style('left','80px');
+                }
+            }else{
+                svg.selectAll('.portrait')
+                    .style('opacity', function(){
+                        const id = d3.select(this).attr('id');
+                        return (id == `portrait-${d.id}`) ? 1 : dimmed;
+                    });
+            }
+
             const name = d.name.toUpperCase();
             d3.select('#sidebar-header').html(`${name}`);
             d3.select('#content-animal-selected').classed('hidden',false);
@@ -1235,6 +1375,10 @@ function enablePortraitInteractions(){
             d3.select('#content-filters').classed('hidden',true);
             d3.select('#content-success-stories').classed('hidden',true);
             d3.select('#sidebar-content').classed('content-shift-up',true);
+
+            if(d3.select('#tooltip').classed('hidden')){
+                activateTooltip(d);
+            }
 
             d3.select('#content-animal-selected').select('img')
                 .attr('src',`./assets/images/${d.name}_${d.id}.jpg`);
@@ -1280,10 +1424,14 @@ function deselect(){
         const sidebar = d3.select('#sidebar');
         const sidebarW = sidebar.node().getBoundingClientRect().width;
 
+        d3.select('#sidebar-toggle').select('i').classed('animate',false);
+        d3.select('#sidebar-tooltip').classed('hidden',true);
+        d3.select('#tooltip-arrow').classed('hidden',true);
+
         if(obj.sidebarClosed == 0){
             // close sidebar
             obj.sidebarClosed = 1;
-            sidebar.transition().style('left',`-${sidebarW-20}px`);
+            sidebar.transition().duration(500).style('left',`-${sidebarW-20}px`);
             d3.select('#sidebar-toggle').transition().style('left','20px');
             d3.select('#sidebar-toggle').select('i').transition().style('transform','rotate(0deg)');
         }

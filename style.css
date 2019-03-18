@@ -1,7 +1,8 @@
-/* imports acumin */
+/* imports acumin-pro */
 @import url("https://use.typekit.net/zay1sxv.css");
-/* imports barlow as back-up */
-@import url('https://fonts.googleapis.com/css?family=Barlow+Condensed:300,400,500,600,700,800,900|Barlow:300,400,500,600,700,800,900');
+
+/* imports archivo as acumin-pro back-up */
+@import url('https://fonts.googleapis.com/css?family=Archivo:400,400i,500,500i,600,600i,700,700i');
 
 /* imports baskerville italic for information icon */
 @font-face {
@@ -9,12 +10,17 @@
     src: url('assets/fonts/BaskervilleMTStd-BoldIt.otf');
 }
 
+/* imports league gothic as acumin-pro-extra-condensed back-up */
+@font-face {
+    font-family: 'League-Gothic';
+    src: url('assets/fonts/leaguegothic-regular-webfont.ttf');
+    font-weight: 600; /* actually 400 */
+}
+
 body {
-    font-family: acumin-pro, 'Barlow', sans-serif !important;
+    font-family: acumin-pro, 'Archivo', sans-serif !important;
     -webkit-font-smoothing: antialiased !important;
     color: #444444 !important;
-    /* font-family: acumin-pro-condensed, 'Barlow Condensed', sans-serif;
-    font-family: acumin-pro-extra-condensed, 'Barlow Condensed', sans-serif; */
 }
 
 #splash {
@@ -51,6 +57,16 @@ body {
     font-size: 40pt;
 }
 
+#splash-line-container {
+    width: 200px;
+}
+
+.splash-line {
+    background-color: #E0685F;
+    height: 2px;
+    width: 70px;
+}
+
 .btn-container {
     display: flex;
     justify-content: center;
@@ -64,21 +80,12 @@ body {
 }
 
 .acumin-cond {
-    font-family: acumin-pro-extra-condensed;
+    font-family: acumin-pro-extra-condensed,'League-Gothic';
     font-size: 40pt;
     font-weight: 600;
     letter-spacing: 1px;
     color: #1A5289;
 }
-
-/* .barlow {
-    font-family: 'Barlow';
-}
-
-.barlow-cond {
-    font-family: 'Barlow Condensed';
-    font-weight: 300;
-} */
 
 .bold {
     font-weight: 600;
@@ -173,7 +180,7 @@ body {
     outline: none;
 }
 
-#link-prev {
+.link-prev {
     margin-right: 20px;
 }
 
@@ -234,7 +241,7 @@ body {
     margin: 30px 0px 60px 0px !important;
 }
 
-#content-filters {
+#content-filters, #content-success-stories, #content-how-to-read {
     overflow-y: scroll;
     font-size: 12pt;
 }
@@ -421,12 +428,15 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
     text-anchor: end;
 }
 
-/* CHART */
+/* HTR - MOBILE */
+#htr-mobile {
+    position: absolute;
+    background-color: #F5F9FF;
+    padding: 20px 20px;
+    font-size: 10pt;
+}
 
-/* #chart {
-    width: 100%;
-    height: 90vh;
-} */
+/* CHART */
 
 #background {
     fill: white;
@@ -483,6 +493,7 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
     fill: none;
     stroke: #444444;
     stroke-width: 0.5px;
+    display: none;
 }
 
 .gender {
@@ -583,10 +594,10 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
 
 .scale-indicator {
     width: 1px;
-    height: 12px;
+    height: 8px;
     border-radius: 1px;
     background-color: #444444;
-    margin-top: -6px;
+    margin-top: -4px;
 }
 
 .demo-desc p {
@@ -622,7 +633,7 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
 }
 
 .tooltip-size-active {
-    stroke-width: 1px !important;
+    stroke-width: 1.5px !important;
 }
 
 .arrow-up {
@@ -678,6 +689,39 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
 
     #sidebar-toggle i {
         padding: 11.5px 11.5px;
+
+    }
+
+    .animate {
+        animation-name: color;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
+    }
+
+    @keyframes color {
+        0% {
+          color: #444444;
+        }
+        50% {
+          color: #E0685F;
+        }
+        100% {
+          color: #444444;
+        }
+    }
+
+    #sidebar-tooltip {
+        position: absolute;
+        background-color: #444444;
+        top: 14px;
+        left: 90px;
+        padding: 15px 15px;
+    }
+
+    #sidebar-tooltip p {
+        color: white;
+        font-size: 10pt;
+        margin-bottom: 0px;
     }
 
     #sidebar-header {
@@ -685,7 +729,7 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
         margin-bottom: 10px;
     }
 
-    .pin-link, #content-filters, #no-match {
+    .pin-link, #content-filters, #content-success-stories, #no-match {
         font-size: 10pt;
     }
 
