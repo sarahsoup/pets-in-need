@@ -89,6 +89,7 @@ obj.howToReadStep = 0;
 obj.isMobile = 0;
 obj.sidebarClosed = 1;
 obj.firstPortrait = 1;
+obj.firstHTR = 1;
 
 // create sliders
 const sliderSpecies = document.getElementById('slider-species');
@@ -474,7 +475,7 @@ function resize() {
             })
         
         //chart
-        obj.m = { l: 40, t: 40, r: 20, b: 80 };
+        obj.m = { l: 40, t: 40, r: 20, b: 60 };
 
         // sidebar
         sidebar.style('height',`${window.innerHeight}px`);
@@ -925,7 +926,7 @@ function howToRead(direction){
             if(obj.isMobile == 1){
                 d3.select('#htr-mobile').classed('hidden',false);
                 // set width
-                const width = obj.chartW - obj.m.l - obj.m.r;
+                const width = obj.chartW - (obj.m.l*0.5) - (obj.m.r*0.5);
                 d3.select('#htr-mobile').style('width',`${width}px`);
                 // get height
                 const height = d3.select('#htr-mobile').node().getBoundingClientRect().height;
@@ -938,7 +939,7 @@ function howToRead(direction){
                 obj.mHTRy1 = (portraitCY < svgCY) ? yBottom : yTop;
                 d3.select('#htr-mobile')
                     .style('top',`${obj.mHTRy1}px`)
-                    .style('left',`${svgNode.x + obj.m.l}px`);
+                    .style('left',`${svgNode.x + (obj.m.l*0.5)}px`);
             }
         }else{
             // transform scales and portraits
@@ -1000,6 +1001,21 @@ function howToRead(direction){
         d3.selectAll('.link-prev')
             .classed('link-disabled',false);
 
+        // if mobile, adjust text position
+        if(obj.isMobile == 1){
+            const height = d3.select('#htr-mobile').node().getBoundingClientRect().height;
+            const svgNode = d3.select('#chart').node().getBoundingClientRect();
+            obj.mHTRy2 = svgNode.y+svgNode.height-height-5;
+            if(direction == 'forward'){
+                d3.select('#htr-mobile')
+                    .transition()
+                    .style('top',`${obj.mHTRy2}px`);
+            }else{
+                d3.select('#htr-mobile')
+                    .style('top',`${obj.mHTRy2}px`);
+            }
+        }
+
         if(direction == 'forward'){
             // transform axis and portraits
             obj.xScale.domain([obj.animalMax.duration-2,obj.animalMax.duration+2]);
@@ -1030,16 +1046,6 @@ function howToRead(direction){
                 .transition()
                 .delay(250)
                 .style('opacity',1);
-            
-            // if mobile
-            if(obj.isMobile == 1){
-                const height = d3.select('#htr-mobile').node().getBoundingClientRect().height;
-                const svgNode = d3.select('#chart').node().getBoundingClientRect();
-                obj.mHTRy2 = svgNode.y+svgNode.height-height-5;
-                d3.select('#htr-mobile')
-                    .transition()
-                    .style('top',`${obj.mHTRy2}px`);
-            }
         }else{
             d3.selectAll('.link-next').html('next →&nbsp;');
         }
@@ -1061,7 +1067,14 @@ function howToRead(direction){
 
         d3.selectAll('.link-next').html('done');
 
+        // if mobile, adjust text position
         if(obj.isMobile == 1){
+            const height = d3.select('#htr-mobile').node().getBoundingClientRect().height;
+            const svgNode = d3.select('#chart').node().getBoundingClientRect();
+            obj.mHTRy3 = svgNode.y+svgNode.height-height-5;
+            d3.select('#htr-mobile')
+                // .transition()
+                .style('top',`${obj.mHTRy3}px`);
         }
         
 
@@ -1141,21 +1154,26 @@ function setUpLegend(){
                 return radius;
             });
 
-        d3.selectAll('.g-trait').selectAll('.legend-text')
-            .attr('x',0)
-            .attr('y',20);
+        if(obj.firstHTR == 1){
+            obj.firstHTR = 0;
 
-        d3.select('#g-extraSpecies').select('tspan')
-            .attr('x',0);
+            d3.selectAll('.g-trait').selectAll('.legend-text')
+                .attr('x',0)
+                .attr('y',20);
 
-        d3.select('#g-extraHumans').select('tspan')
-            .attr('x',0)
-            .html('with');
-        d3.select('#g-extraHumans').select('.legend-text')
-            .append('tspan')
-            .attr('x',0)
-            .attr('dy','1.2em')
-            .html('people');
+            d3.select('#g-extraSpecies').select('tspan')
+                .attr('x',0);
+
+            d3.select('#g-extraHumans').select('tspan')
+                .attr('x',0)
+                .html('with');
+
+            d3.select('#g-extraHumans').select('.legend-text')
+                .append('tspan')
+                .attr('x',0)
+                .attr('dy','1.2em')
+                .html('people');
+        }
 
         d3.selectAll('.g-trait')
             .each(function(d,i){
@@ -1218,16 +1236,6 @@ function activateTooltip(data){
     tooltip.select('#ind-energy').style('margin-left',`${scaleMap.get(data.traitEnergy)}`);
     tooltip.select('#ind-openness').style('margin-left',`${scaleMap.get(data.traitOpenness)}`);
     tooltip.select('#ind-affection').style('margin-left',`${scaleMap.get(data.traitAffection)}`);
-
-    // if(data.traitExtraSpecies == '3'){
-    //     tooltip.select('#tooltip-extraSpecies').html(`${traitSpeciesMap.get(data.traitExtraSpecies)}`);
-    // }else{
-    //     tooltip.select('#tooltip-extraSpecies').html(`${traitSpeciesMap.get(data.traitExtraSpecies)} ${data.species}s`);
-    // }
-    // tooltip.select('#tooltip-extraHumans').html(`${traitHumansMap.get(data.traitExtraHumans)}`);
-    // tooltip.select('#tooltip-openness').html(`${traitOpennessMap.get(data.traitOpenness)}`);
-    // tooltip.select('#tooltip-energy').html(`${traitEnergyMap.get(data.traitEnergy)}`);
-    // tooltip.select('#tooltip-affection').html(`${traitAffectionMap.get(data.traitAffection)}`);
 
     // position tooltip
     const tooltipNode = tooltip.node().getBoundingClientRect();
@@ -1362,7 +1370,7 @@ function enablePortraitInteractions(){
                         .classed('hidden',false)
                         .classed('arrow-left',true)
                         .style('border-right','10px solid #444444')
-                        .style('top','38.5px') // center of toggle
+                        .style('top','28.5px') // center of toggle
                         .style('left','80px');
                 }
             }else{

@@ -681,7 +681,7 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
     #sidebar-toggle {
         background-color: #F5F9FF;
         position: absolute;
-        top: 25px;
+        top: 15px;
         height: 47px;
         width: 47px;
         cursor: pointer;
@@ -729,12 +729,24 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
         margin-bottom: 10px;
     }
 
+    .head {
+        padding-top: 15px;
+    }
+
     .pin-link, #content-filters, #content-success-stories, #no-match {
         font-size: 10pt;
     }
 
+    #proj-name-sidebar, .slider-labels, .pin-btn, .axis-label {
+        font-size: 8pt !important;
+    }
+
     .radio-btn {
         margin-top: 0px;
+    }
+
+    .pin-btn {
+        margin-right: 10px;
     }
 
     .modal-dialog {
