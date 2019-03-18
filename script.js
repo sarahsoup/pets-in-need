@@ -925,7 +925,7 @@ function howToRead(direction){
             if(obj.isMobile == 1){
                 d3.select('#htr-mobile').classed('hidden',false);
                 // set width
-                const width = obj.chartW - obj.m.l - obj.m.r - 20;
+                const width = obj.chartW - obj.m.l - obj.m.r;
                 d3.select('#htr-mobile').style('width',`${width}px`);
                 // get height
                 const height = d3.select('#htr-mobile').node().getBoundingClientRect().height;
@@ -938,7 +938,7 @@ function howToRead(direction){
                 obj.mHTRy1 = (portraitCY < svgCY) ? yBottom : yTop;
                 d3.select('#htr-mobile')
                     .style('top',`${obj.mHTRy1}px`)
-                    .style('left',`${svgNode.x + obj.m.l + 10}px`);
+                    .style('left',`${svgNode.x + obj.m.l}px`);
             }
         }else{
             // transform scales and portraits
@@ -1035,7 +1035,7 @@ function howToRead(direction){
             if(obj.isMobile == 1){
                 const height = d3.select('#htr-mobile').node().getBoundingClientRect().height;
                 const svgNode = d3.select('#chart').node().getBoundingClientRect();
-                obj.mHTRy2 = svgNode.y+svgNode.height-obj.m.b-height-10;
+                obj.mHTRy2 = svgNode.y+svgNode.height-height-5;
                 d3.select('#htr-mobile')
                     .transition()
                     .style('top',`${obj.mHTRy2}px`);
@@ -1203,8 +1203,13 @@ function setUpLegend(){
 
 function activateTooltip(data){
     const tooltip = d3.select('#tooltip');
-    // display tooltip
-    tooltip.classed('hidden',false);
+    // display tooltip for desktop, not mobile
+
+    if(obj.isMobile == 0){
+        tooltip.classed('hidden',false);
+    }else {
+        tooltip.classed('hidden',true);
+    }
 
     // trait descriptions
     tooltip.select('#tooltip-extraSpecies').select('.species').html(`${data.species}s`);
@@ -1335,7 +1340,7 @@ function enablePortraitInteractions(){
         .on('click',function(d){
             
             if(obj.isMobile == 1){
-                // also bring in tooltip
+                // tooltip functionality on touch
                 activateTooltip(d);
                 svg.selectAll('.portrait')
                     .sort(function(a,b){
