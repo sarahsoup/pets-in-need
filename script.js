@@ -87,6 +87,7 @@ obj.dataFilter = 'available';
 obj.howToReadOpen = false;
 obj.howToReadStep = 0;
 obj.isMobile = 0;
+obj.isMLandscape = 0;
 obj.sidebarClosed = 1;
 obj.firstPortrait = 1;
 obj.firstHTR = 1;
@@ -440,8 +441,8 @@ function resize() {
 
     // check if mobile
     if(window.innerWidth < 576){
-        console.log('mobile');
         obj.isMobile = 1;
+        obj.isMLandscape = 0;
         d3.select('#sidebar-toggle').classed('hidden',false);
 
         // sidebar
@@ -482,16 +483,23 @@ function resize() {
         // sidebar
         sidebar.style('height',`${window.innerHeight}px`);
 
-    }else{
-        console.log('not mobile');
+    }else if(window.innerWidth < 768){
         obj.isMobile = 0;
+        obj.isMLandscape = 1;
+        d3.select('#sidebar').style('left','0px');
+        d3.select('#sidebar-toggle').classed('hidden',true);
+        obj.m = { l: 40, t: 40, r: 20, b: 60 };
+
+    }else{
+        obj.isMobile = 0;
+        obj.isMLandscape = 0;
         d3.select('#sidebar').style('left','0px');
         d3.select('#sidebar-toggle').classed('hidden',true);
         obj.m = { l: 50, t: 50, r: 50, b: 80 };
     }
 
     // mobile specific
-    d3.select('#proj-name-sidebar').html((obj.isMobile == 1) ? 'w & w' : 'worthy & waiting');
+    d3.select('#proj-name-sidebar').html((obj.isMobile == 1 || obj.isMLandscape == 1) ? 'w & w' : 'worthy & waiting');
 
     // get btn height for info btn
     const btnH = d3.select('#btn-read').node().getBoundingClientRect().height;
@@ -501,7 +509,7 @@ function resize() {
 
     // resize sidebar height
     const filtersY = d3.select('#content-filters').node().getBoundingClientRect().y;
-    const filtersH = Math.max(window.innerHeight - filtersY - 60, 20);
+    const filtersH = (obj.isMLandscape == 1) ? Math.max(window.innerHeight - filtersY - 20, 20) : Math.max(window.innerHeight - filtersY - 60, 20);
     d3.select('#content-filters')
         .style('height',`${filtersH}px`);
     d3.select('#content-success-stories')
@@ -903,7 +911,7 @@ function howToRead(direction){
                         maxHeight = pHeight;
                     }
                 })
-                .style('height',`${Math.ceil(maxHeight)}px`);
+                .style('height',(obj.isMLandscape == 1) ? null : `${Math.ceil(maxHeight)}px`);
 
             // update chart
             d3.selectAll(`.${obj.dataFilter}`)
@@ -972,6 +980,11 @@ function howToRead(direction){
                 d3.select('#htr-mobile')
                     .transition()
                     .style('top',`${obj.mHTRy1}px`);
+            }else if(obj.isMLandscape == 1){
+                d3.selectAll('.htr-1').style('opacity',1);
+                d3.select('#x-scale').style('opacity',1);
+                d3.select('#y-scale').style('opacity',1);
+                d3.selectAll('.axis-label').style('opacity',0.4);
             }
         }
 
@@ -1007,7 +1020,7 @@ function howToRead(direction){
         if(obj.isMobile == 1){
             const height = d3.select('#htr-mobile').node().getBoundingClientRect().height;
             const svgNode = d3.select('#chart').node().getBoundingClientRect();
-            obj.mHTRy2 = svgNode.y+svgNode.height-height-5;
+            obj.mHTRy2 = svgNode.y+svgNode.height-height-10;
             if(direction == 'forward'){
                 d3.select('#htr-mobile')
                     .transition()
@@ -1016,6 +1029,11 @@ function howToRead(direction){
                 d3.select('#htr-mobile')
                     .style('top',`${obj.mHTRy2}px`);
             }
+        }else if(obj.isMLandscape == 1){
+            d3.selectAll('.htr-1').style('opacity',0.5);
+            d3.select('#x-scale').style('opacity',0.5);
+            d3.select('#y-scale').style('opacity',0.5);
+            d3.selectAll('.axis-label').style('opacity',0.2);
         }
 
         if(direction == 'forward'){
@@ -1030,7 +1048,7 @@ function howToRead(direction){
                 .call((obj.isMobile == 0) ? d3.axisLeft(obj.yScale).ticks(2).tickFormat(d3.format('d')) : d3.axisLeft(obj.yScale).ticks(4).tickFormat(d3.format('d')));
             d3.selectAll(`.${obj.dataFilter}`)
                 .transition()
-                .attr('transform',d => (d.id == obj.animalMax.id) ? (obj.isMobile == 0) ? `translate(${obj.xScale(d.duration)},${obj.yScale(d.age)}) scale(2)` : `translate(${obj.xScale(d.duration)},${obj.yScale(d.age)}) scale(1.5)`
+                .attr('transform',d => (d.id == obj.animalMax.id) ? (obj.isMobile == 0 && obj.isMLandscape == 0) ? `translate(${obj.xScale(d.duration)},${obj.yScale(d.age)}) scale(2)` : `translate(${obj.xScale(d.duration)},${obj.yScale(d.age)}) scale(1.5)`
                 : `translate(${obj.xScale(d.duration)},${obj.yScale(d.age)})`);
 
             // legend
@@ -1073,7 +1091,7 @@ function howToRead(direction){
         if(obj.isMobile == 1){
             const height = d3.select('#htr-mobile').node().getBoundingClientRect().height;
             const svgNode = d3.select('#chart').node().getBoundingClientRect();
-            obj.mHTRy3 = svgNode.y+svgNode.height-height-5;
+            obj.mHTRy3 = svgNode.y+svgNode.height-height-10;
             d3.select('#htr-mobile')
                 // .transition()
                 .style('top',`${obj.mHTRy3}px`);
@@ -1108,6 +1126,13 @@ function howToRead(direction){
             .transition()
             .style('opacity',1)
             .attr('transform',d => `translate(${obj.xScale(d.duration)},${obj.yScale(d.age)})`);
+
+        if(obj.isMLandscape == 1){
+            d3.selectAll('.htr-1').style('opacity',1);
+            d3.select('#x-scale').style('opacity',1);
+            d3.select('#y-scale').style('opacity',1);
+            d3.selectAll('.axis-label').style('opacity',0.4);
+        }
     }
 }
 
@@ -1115,15 +1140,15 @@ function setUpLegend(){
     d3.select('#g-legend')
         .attr('transform',`translate(${obj.xScale(obj.animalMax.duration)},${obj.yScale(obj.animalMax.age)})`);
     d3.select('#g-size-legend')
-        .attr('transform',(obj.isMobile == 0) ? 'translate(-200,-30)' : 'translate(-100,-100)');
+        .attr('transform',(obj.isMobile == 0 && obj.isMLandscape == 0) ? 'translate(-200,-30)' : (obj.isMLandscape == 1) ? 'translate(-180,-30)' : 'translate(-100,-100)');
     d3.select('#g-color')
-        .attr('transform',(obj.isMobile == 0) ? 'translate(-200,10)' : 'translate(5,-128)');
+        .attr('transform',(obj.isMobile == 0 && obj.isMLandscape == 0) ? 'translate(-200,10)' : (obj.isMLandscape == 1) ? 'translate(-180,10)' : 'translate(5,-128)');
     d3.select('#g-species')
-        .attr('transform',(obj.isMobile == 0) ? 'translate(120,-30)' : 'translate(-75,102)');
+        .attr('transform',(obj.isMobile == 0 && obj.isMLandscape == 0) ? 'translate(120,-30)' : (obj.isMLandscape == 1) ?' translate(100,-30)' : 'translate(-75,102)');
     d3.select('#g-gender')
-        .attr('transform',(obj.isMobile == 0) ? 'translate(120,20)' : 'translate(5,80)');
+        .attr('transform',(obj.isMobile == 0 && obj.isMLandscape == 0) ? 'translate(120,20)' : (obj.isMLandscape == 1) ? 'translate(100,20)' : 'translate(5,80)');
 
-    if(obj.isMobile == 0){
+    if(obj.isMobile == 0 && obj.isMLandscape == 0){
         d3.selectAll('.size-background-circle')
             .attr('r',function(){
                 let radius;
@@ -1182,7 +1207,7 @@ function setUpLegend(){
                 const extraSpace = (d3.select(this).attr('id') == 'g-extraSpecies') ? 45 : (d3.select(this).attr('id') == 'g-affection') ? 15 : 10;
                 const degrees = ((72*i)+15);
                 const radians = ((degrees * Math.PI) / 180) - (Math.PI/2);
-                const radius = (obj.isMobile == 0) ? ((5 * rayUnits) + 10) * 2 : ((5 * rayUnits) + 10) * 1.5;
+                const radius = (obj.isMobile == 0 && obj.isMLandscape == 0) ? ((5 * rayUnits) + 10) * 2 : ((5 * rayUnits) + 10) * 1.5;
                 const x = (radius + extraSpace) * Math.cos(radians);
                 const y = (radius + extraSpace) * Math.sin(radians);
                 d3.select(this).attr('transform',`translate(${x},${y})`);
@@ -1225,7 +1250,7 @@ function activateTooltip(data){
     const tooltip = d3.select('#tooltip');
     tooltip.classed('hidden',false);
     // display partial tooltip for mobile
-    if(obj.isMobile == 1){
+    if(obj.isMobile == 1 || obj.isMLandscape == 1){
         tooltip.select('.spacer').classed('hidden',true);
         tooltip.selectAll('.demo-desc').classed('hidden',true);
     }
@@ -1257,6 +1282,12 @@ function activateTooltip(data){
         d3.select('#sidebar-toggle').select('i')
             .classed('animate',true);
 
+    }else if(obj.isMLandscape == 1){
+        const tooltipDelta = window.innerHeight - (portraitCY-35+tooltipNode.height);
+
+        tooltip
+            .style('left', (portraitCX < svgCX) ? (portraitCX + radius + iconOffset) +'px' : (portraitCX - radius - tooltipNode.width - (iconOffset/2)) +'px')
+            .style('top', (tooltipDelta > 0) ? (portraitCY-35)+'px' : (portraitCY-35+tooltipDelta-20)+'px');
     }else{
         const tooltipDelta = window.innerHeight - (portraitCY-35+tooltipNode.height);
 
@@ -1334,23 +1365,22 @@ function enablePortraitInteractions(){
             }
         })
         .on('mouseleave',function(d){
-            d3.select('#tooltip').classed('hidden',true);
-            d3.select('#tooltip-arrow')
-                .classed('arrow-right', false)
-                .classed('arrow-left', false);
-            d3.select('#tooltip-icons')
-                .classed('hidden',true);
             if(d3.select('#content-animal-selected').classed('hidden')){
                 svg.selectAll('.portrait')
                     .transition()
                     .style('opacity', 1);
+
+                d3.select('#tooltip').classed('hidden',true);
+                d3.select('#tooltip-arrow')
+                    .classed('arrow-right', false)
+                    .classed('arrow-left', false);
+                d3.select('#tooltip-icons')
+                    .classed('hidden',true);
             }
         })
         .on('click',function(d){
-            
+            activateTooltip(d);
             if(obj.isMobile == 1){
-                // tooltip functionality on touch
-                activateTooltip(d);
                 svg.selectAll('.portrait')
                     .sort(function(a,b){
                         if (a.id != d.id){
@@ -1404,13 +1434,21 @@ function enablePortraitInteractions(){
                 .classed('hidden', (obj.dataFilter == 'available') ? false : true);
 
             const descY = d3.select('#content-desc').node().getBoundingClientRect().y;
-            const descH = Math.max(window.innerHeight - descY - 60, 20);
+            const descH = (obj.isMLandscape == 1) ? Math.max(window.innerHeight - descY - 20, 20) : Math.max(window.innerHeight - descY - 60, 20);
             d3.select('#content-desc')
                 .style('height',`${descH}px`);
         });
 }
 
 function deselect(){
+    // hide tooltip
+    d3.select('#tooltip').classed('hidden',true);
+    d3.select('#tooltip-arrow')
+        .classed('arrow-right', false)
+        .classed('arrow-left', false);
+    d3.select('#tooltip-icons')
+        .classed('hidden',true);
+
     // if HTR open, close
     if(d3.select('#btn-read').classed('pin-btn-active')){
         obj.howToReadStep = 0;
