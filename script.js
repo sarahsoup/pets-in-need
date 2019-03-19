@@ -185,6 +185,7 @@ d3.csv('./assets/data/pin_data.csv',function(row){
     // filter out animals without intake date and with dob after intake date
     data = data.filter(d => !isNaN(d.intake) && (d.intake.getTime() > d.dob.getTime()));
     // filter now those manually determined to not show
+    data = data.filter(d => d.visible == 1);
 
     // determine stay duration and age
     data.forEach(function(row){
