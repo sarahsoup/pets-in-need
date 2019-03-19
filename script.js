@@ -434,7 +434,9 @@ function resize() {
     d3.select('#splash-line-container')
         .style('position','absolute')
         .style('top',((header.height*0.55))+'px')
-        .style('left',((col.width/2)-(lineW/2)-15)+'px');
+        .style('left',((col.width/2)-(lineW/2)-15)+'px')
+        .selectAll('div')
+        .classed('splash-line',true);
 
     // check if mobile
     if(window.innerWidth < 576){
@@ -926,7 +928,7 @@ function howToRead(direction){
             if(obj.isMobile == 1){
                 d3.select('#htr-mobile').classed('hidden',false);
                 // set width
-                const width = obj.chartW - (obj.m.l*0.5) - (obj.m.r*0.5);
+                const width = obj.chartW /*- (obj.m.l*0.5) - (obj.m.r*0.5)*/;
                 d3.select('#htr-mobile').style('width',`${width}px`);
                 // get height
                 const height = d3.select('#htr-mobile').node().getBoundingClientRect().height;
@@ -939,7 +941,7 @@ function howToRead(direction){
                 obj.mHTRy1 = (portraitCY < svgCY) ? yBottom : yTop;
                 d3.select('#htr-mobile')
                     .style('top',`${obj.mHTRy1}px`)
-                    .style('left',`${svgNode.x + (obj.m.l*0.5)}px`);
+                    .style('left',`${svgNode.x /*+ (obj.m.l*0.5)*/}px`);
             }
         }else{
             // transform scales and portraits
