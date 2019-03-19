@@ -177,12 +177,16 @@ d3.csv('./assets/data/pin_data.csv',function(row){
         traitOpenness: row.openness,
         traitEnergy: row.energy,
         traitAffection: row.affection,
-        description: row.description.substring(1,row.description.length-1)
+        description: row.description.substring(1,row.description.length-1),
+        visible: ['y','yes'].includes(row.make_visible.toLowerCase()) ? 1 : 0
     }
 }).then(function(data){
 
     // filter out animals without intake date and with dob after intake date
     data = data.filter(d => !isNaN(d.intake) && (d.intake.getTime() > d.dob.getTime()));
+    // filter now those manually determined to not show
+
+    // determine stay duration and age
     data.forEach(function(row){
         row.duration = (row.adopted == 1) ? getMonths(row.intake,row.adoption) : getMonths(row.intake,todayDate);
         row.age = (row.adopted == 1) ? getYears(row.dob,row.adoption) : getYears(row.dob,todayDate);
