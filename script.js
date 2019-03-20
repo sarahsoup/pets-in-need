@@ -36,7 +36,7 @@ obj.yScale = d3.scaleLinear();
 // obj.m = { l: 50, t: 50, r: 50, b: 80 };
 
 // other variables
-const dimmed = 0.4;
+const dimmed = 0.3;
 
 const weightsMax = {
     dog: { small: 15, medium: 50 },
@@ -263,7 +263,7 @@ d3.csv('./assets/data/pin_data.csv',function(row){
             const y = (radius + 5 - yoffset) * Math.sin(radians);
 
             d3.select(this)
-                .style('top',`${y+yoffset}px`)
+                .style('top',`${y+(yoffset*2)}px`)
                 .style('left',`${x+xoffset}px`);
         })
 
