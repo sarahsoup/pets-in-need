@@ -504,7 +504,8 @@ function resize() {
     }
 
     // mobile specific
-    d3.select('#proj-name-sidebar').html((obj.isMobile == 1 || obj.isMLandscape == 1) ? 'w & w' : 'worthy & waiting');
+    const sidebarHeadW = d3.select('#sidebar').select('.head').node().getBoundingClientRect().width - 30;
+    d3.select('#proj-name-sidebar').html((obj.isMobile == 1 || obj.isMLandscape == 1 || sidebarHeadW < 240) ? 'w & w' : 'worthy & waiting');
 
     // get btn height for info btn
     const btnH = d3.select('#btn-read').node().getBoundingClientRect().height;
