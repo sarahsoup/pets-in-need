@@ -1455,6 +1455,9 @@ function deselect(){
     d3.select('#tooltip-icons')
         .classed('hidden',true);
 
+    // remove image from portrait
+    d3.select('#content-animal-selected').select('img').attr('src','');
+
     // if HTR open, close
     if(d3.select('#btn-read').classed('pin-btn-active')){
         obj.howToReadStep = 0;
