@@ -165,6 +165,7 @@ d3.csv('./assets/data/pin_data.csv',function(row){
         intake: new Date(row.intake_date),
         adopted: +adoptedIn,
         adoption: new Date(adoptionDate),
+        location: row.location,
         species: row.species.toLowerCase(),
         gender: ['f','female'].includes(row.gender.toLowerCase()) ? 'female' : 'male',
         dob: new Date(row.approx_date_of_birth),
@@ -181,6 +182,8 @@ d3.csv('./assets/data/pin_data.csv',function(row){
         visible: ['y','yes'].includes(row.make_visible.toLowerCase()) ? 1 : 0
     }
 }).then(function(data){
+
+    console.log(data);
 
     // filter out animals without intake date and with dob after intake date
     data = data.filter(d => !isNaN(d.intake) && (d.intake.getTime() > d.dob.getTime()));
@@ -381,6 +384,22 @@ d3.csv('./assets/data/pin_data.csv',function(row){
                 if(obj.dataFilter == 'available'){
                     maxDur = d3.max(dataAvailable.map(d => d.duration));
                     maxObj = dataAvailable.find(d => d.duration == maxDur);
+                    // unfilter all in case animal with maxDur is hidden
+                    d3.selectAll('.radio-inner').classed('clicked',true);
+                    sliderSpecies.noUiSlider.reset();
+                    sliderHumans.noUiSlider.reset();
+                    sliderEnergy.noUiSlider.reset();
+                    sliderOpenness.noUiSlider.reset();
+                    sliderAffection.noUiSlider.reset();
+                    d3.select('#no-match').classed('hidden',true);
+                    d3.selectAll('.available')
+                        .classed('hidden',false)
+                        .classed('hidden-bySpecies',false)
+                        .classed('hidden-bytraitSpecies',false)
+                        .classed('hidden-bytraitHumans',false)
+                        .classed('hidden-bytraitEnergy',false)
+                        .classed('hidden-bytraitOpenness',false)
+                        .classed('hidden-bytraitAffection',false);
                 }else{
                     maxDur = d3.max(dataAdopted.map(d => d.duration));
                     maxObj = dataAdopted.find(d => d.duration == maxDur);
@@ -418,8 +437,7 @@ d3.csv('./assets/data/pin_data.csv',function(row){
                 obj.howToReadStep++;
                 howToRead('forward');
             }else if(obj.howToReadStep == 3){
-                obj.howToReadStep = 0;
-                howToRead();
+                deselect();
             }
         })
 })
@@ -1436,6 +1454,14 @@ function enablePortraitInteractions(){
                 .html(d.description);
             d3.select('#visit-desc').select('.span-name')
                 .html(`${d.name}`);
+            d3.select('#span-location')
+                .html((d.location.toLowerCase().includes('redwood')) ?
+                    '871 5th Avenue, Redwood City, CA' :
+                    '3281 E Bayshore Road, Palo Alto, CA');
+            d3.select('#span-hours')
+                .html((d.location.toLowerCase().includes('redwood')) ?
+                    'Open weekdays 12:00-5:00 pm and weekends 10:00 am-5:00 pm.' :
+                    'Open weekdays 12:00-5:00 pm and Sundays 10:00 am-5:00 pm.');
             d3.select('#visit-desc')
                 .classed('hidden', (obj.dataFilter == 'available') ? false : true);
 
